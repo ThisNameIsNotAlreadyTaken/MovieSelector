@@ -4,10 +4,11 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:shell="http://schemas.microsoft.com/winfx/2006/xaml/presentation/shell"
-        xmlns:local="clr-namespace:MovieSelector.Infrastructure"
+        xmlns:converters="clr-namespace:Common.Instrastructure.Converters;assembly=Common"
         mc:Ignorable="d" x:Class="MovieSelector.Windows.MainWindow"
+        Icon="../Resources/icon.png"
         Title="Movie Selector"
-        Width="500" Height="300" Icon="../Resources/icon.png">
+        Width="500" Height="300">
     <shell:WindowChrome.WindowChrome>
         <shell:WindowChrome
             ResizeBorderThickness="6"
@@ -17,10 +18,10 @@
         </shell:WindowChrome>
     </shell:WindowChrome.WindowChrome>
     <Window.Resources>
-        <local:NullVisibilityConverter x:Key="NullVisibilityConverter" />
-        <local:ListCountVisibilityConverter x:Key="ListCountVisibilityConverter" />
-        <local:AntiNullVisibilityConverter x:Key="AntiNullVisibilityConverter" />
-        <local:AntiListCountVisibilityConverter x:Key="AntiListCountVisibilityConverter" />
+        <converters:NullVisibilityConverter x:Key="NullVisibilityConverter" />
+        <converters:ListCountVisibilityConverter x:Key="ListCountVisibilityConverter" />
+        <converters:AntiNullVisibilityConverter x:Key="AntiNullVisibilityConverter" />
+        <converters:AntiListCountVisibilityConverter x:Key="AntiListCountVisibilityConverter" />
     </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>

@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Media.Imaging;
 
-namespace MovieSelector.Models
+namespace Common.Models
 {
     public class Movie
     {

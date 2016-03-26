@@ -6,16 +6,14 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows.Input;
-using MovieSelector.Infrastructure;
-using MovieSelector.Models;
+using Common.Instrastructure;
+using Common.Models;
 
 namespace MovieSelector.ViewModels
 {
     public class MovieSelectorViewModel : ObservableObject
     {
-        private readonly List<Movie> _movieList = new List<Movie>();
-
-        private readonly List<string> _extensionArray = new List<string> { ".avi", ".mkv", "m4v" };
+        private List<Movie> _movieList = new List<Movie>();
 
         private readonly Random _rnd = new Random();
 
@@ -54,14 +52,7 @@ namespace MovieSelector.ViewModels
         
         private void OnDirectoriesCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            _movieList.Clear();
-
-            foreach (var directory in Directories.Where(Directory.Exists))
-            {
-                _movieList.AddRange(Directory.GetFiles(directory, "*", SearchOption.AllDirectories).ToList()
-                    .Where(x => _extensionArray.Any(x.EndsWith))
-                    .Select(x => new Movie(x)));
-            }
+            _movieList = MovieDirectoryHelper.GetMoviesFromFolders(Directories);
         }
 
 

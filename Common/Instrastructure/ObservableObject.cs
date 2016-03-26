@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace MovieSelector.Infrastructure
+namespace Common.Instrastructure
 {
     public class ObservableObject : INotifyPropertyChanged
     {

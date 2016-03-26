@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Input;
 
-namespace MovieSelector.Infrastructure
+namespace Common.Instrastructure
 {
     public class DelegateCommand : ICommand
     {
