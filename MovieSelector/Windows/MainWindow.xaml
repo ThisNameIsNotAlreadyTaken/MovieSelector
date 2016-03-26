@@ -1,0 +1,159 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:shell="http://schemas.microsoft.com/winfx/2006/xaml/presentation/shell"
+        xmlns:local="clr-namespace:MovieSelector.Infrastructure"
+        mc:Ignorable="d" x:Class="MovieSelector.Windows.MainWindow"
+        Title="Movie Selector"
+        Width="500" Height="300" Icon="../Resources/icon.png">
+    <shell:WindowChrome.WindowChrome>
+        <shell:WindowChrome
+            ResizeBorderThickness="6"
+            CaptionHeight="60"
+            CornerRadius="0,0,0,0"
+            GlassFrameThickness="0">
+        </shell:WindowChrome>
+    </shell:WindowChrome.WindowChrome>
+    <Window.Resources>
+        <local:NullVisibilityConverter x:Key="NullVisibilityConverter" />
+        <local:ListCountVisibilityConverter x:Key="ListCountVisibilityConverter" />
+        <local:AntiNullVisibilityConverter x:Key="AntiNullVisibilityConverter" />
+        <local:AntiListCountVisibilityConverter x:Key="AntiListCountVisibilityConverter" />
+    </Window.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Border Grid.RowSpan="2" BorderThickness="1" BorderBrush="Silver">
+            <Border.Background>
+                <LinearGradientBrush StartPoint="0.5,0"
+				   EndPoint="0.5,1">
+                    <GradientStop Color="White" Offset="0" />
+                    <GradientStop Color="Snow" Offset="1" />
+                </LinearGradientBrush>
+            </Border.Background>
+        </Border>
+
+        <Border Grid.Row="0">
+            <Grid>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Border Grid.ColumnSpan="2">
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                                <GradientStop Color="#800080" Offset="0" />
+                                <GradientStop Color="#800080" Offset="1" />
+                            </LinearGradientBrush>
+                        </Border.Background>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="99*"></ColumnDefinition>
+                                <ColumnDefinition Width="65*"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Left" Margin="10,0,0,0" Width="259">
+                                <Button Name="DirectoryDialogShow" Style="{StaticResource WindowButtonStyle}" FontFamily="Segoe UI Symbol" 
+                                      FontSize="30" Content="&#xE0D5;" shell:WindowChrome.IsHitTestVisibleInChrome="True" Click="DirectoryDialogShowClick"
+                                       ToolTip="Select directories to scan" />
+                                <Label Foreground="Snow" HorizontalAlignment="Left" FontSize="30" 
+                                       FontStretch="UltraExpanded" Margin="10,0,0,0">Movie Selector</Label>
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Right" Height="30" Width="54">
+                                <Button Name="MinimizeButton" Style="{StaticResource WindowButtonStyle}" Content="0"
+                             shell:WindowChrome.IsHitTestVisibleInChrome="True" Click="MinimizeClick" />
+                                <Button Name="RestoreButton" Style="{StaticResource WindowButtonStyle}" Content="1" 
+                             shell:WindowChrome.IsHitTestVisibleInChrome="True" Click="RestoreClick" />
+                                <Button Name="CloseButton" Style="{StaticResource WindowButtonStyle}" Content="r" 
+                             shell:WindowChrome.IsHitTestVisibleInChrome="True" Click="CloseClick"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                </Grid>
+            </Grid>
+        </Border>
+
+        <Grid Grid.Row="1">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="65*"></RowDefinition>
+                    <RowDefinition Height="8*"></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="179*"></ColumnDefinition>
+                        <ColumnDefinition Width="313*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Image Source="{Binding SelectedMovie.Image}" Margin="5, 0,2, 0"></Image>
+                    <Grid Grid.Column="1" Margin="15,5,0,15" Visibility="{Binding SelectedMovie, Converter={StaticResource NullVisibilityConverter}}">
+                        <Grid.RowDefinitions>
+                            <RowDefinition></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="75*"></ColumnDefinition>
+                            <ColumnDefinition Width="223*"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <Label>File name :</Label>
+                        <Label Grid.Column="1" Grid.Row="0">
+                            <TextBlock Text="{Binding SelectedMovie.FileName}" TextWrapping="WrapWithOverflow"></TextBlock>
+                        </Label>
+                        <Label Grid.Column="0" Grid.Row="1">Year :</Label>
+                        <Label Grid.Column="1" Grid.Row="1">
+                            <TextBlock Text="{Binding SelectedMovie.Year}" TextWrapping="WrapWithOverflow"></TextBlock>
+                        </Label>
+                        <Label Grid.Column="0" Grid.Row="2">Starring :</Label>
+                        <Label Grid.Column="1" Grid.Row="2">
+                            <TextBlock Text="{Binding SelectedMovie.Actors}" TextWrapping="WrapWithOverflow"></TextBlock>
+                        </Label>
+                        <StackPanel Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="3" Orientation="Horizontal">
+                            <TextBlock VerticalAlignment="Center">Add kinopoisk rating</TextBlock>
+                        </StackPanel>
+                    </Grid>
+                </Grid>
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <WrapPanel Orientation="Horizontal" Margin="10,0,0,0">
+                        <TextBlock> Was Rolled <Bold><TextBlock FontSize="15" Text="{Binding Counter}" /></Bold> times</TextBlock>
+                        <Button Name="ResetCount" Style="{StaticResource WindowColoredButtonStyle}" FontFamily="Segoe UI Symbol" 
+                      FontSize="25" Content="&#xE248;" Command="{Binding ResetCounterCommand}" Margin="10,-12,0,0"
+                      ToolTip="Reset Count" VerticalAlignment="Top"/>
+                    </WrapPanel>
+                    <StackPanel Grid.Column="1" HorizontalAlignment="Right" Orientation="Horizontal" Margin="0,-25,0,0">
+                        <Button Name="SelectMovie" Style="{StaticResource WindowColoredButtonStyle}" FontFamily="Segoe UI Symbol" 
+                      FontSize="33" Content="&#xE19E;" Command="{Binding SelectMovieCommand}" Margin="0,5,10,0"
+                      Visibility="{Binding Directories, Converter={StaticResource ListCountVisibilityConverter}}"   
+                      ToolTip="Get next movie" VerticalAlignment="Top"/>
+                        <Button Name="PlayMovie" Style="{StaticResource WindowColoredButtonStyle}" FontFamily="Segoe UI Symbol" 
+                      FontSize="30" Content="&#xE0A2;" Command="{Binding PlayMovieCommand}"
+                      Visibility="{Binding SelectedMovie, Converter={StaticResource NullVisibilityConverter}}"          
+                      ToolTip="Play" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Grid>
+            </Grid>
+            <Label FontSize="35" Visibility="{Binding Directories, Converter={StaticResource AntiListCountVisibilityConverter}}"
+                   HorizontalAlignment="Center" VerticalAlignment="Center">Select directories to scan.</Label>
+            <WrapPanel Visibility="{Binding Directories, Converter={StaticResource ListCountVisibilityConverter}}"
+                       HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Label FontSize="35" Visibility="{Binding SelectedMovie, Converter={StaticResource AntiNullVisibilityConverter}}">Select movie.</Label>
+            </WrapPanel>
+        </Grid>
+    </Grid>
+</Window>
