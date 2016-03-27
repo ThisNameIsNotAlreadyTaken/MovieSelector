@@ -68,5 +68,32 @@ namespace Common {
                 return ResourceManager.GetString("Extensions", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to http://api.kinopoisk.cf.
+        /// </summary>
+        public static string KinopoiskApiUrl {
+            get {
+                return ResourceManager.GetString("KinopoiskApiUrl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to http://api.qimdb.com/online.
+        /// </summary>
+        public static string QIMDBUrl {
+            get {
+                return ResourceManager.GetString("QIMDBUrl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to http://st.kp.yandex.net/images/.
+        /// </summary>
+        public static string YandexImagesUrl {
+            get {
+                return ResourceManager.GetString("YandexImagesUrl", resourceCulture);
+            }
+        }
     }
 }

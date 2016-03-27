@@ -13,11 +13,20 @@ namespace Common.Instrastructure
         static CommonHelper()
         {
             ExtensionArray = RmManager.GetString("Extensions")?.Split(',').ToList();
+            QimdbUrl = RmManager.GetString("QIMDBUrl");
+            KinopoiskApiUrl = RmManager.GetString("KinopoiskApiUrl");
+            YandexImagesUrl = RmManager.GetString("YandexImagesUrl");
         }
 
-        public static ResourceManager RmManager = new ResourceManager("Common.Resource", Assembly.GetExecutingAssembly());
+        private static readonly ResourceManager RmManager = new ResourceManager("Common.Resource", Assembly.GetExecutingAssembly());
 
         public static readonly List<string> ExtensionArray;
+
+        public static readonly string QimdbUrl;
+
+        public static readonly string KinopoiskApiUrl;
+
+        public static readonly string YandexImagesUrl;
 
         public static BitmapImage ToBitmapImage(this Bitmap bitmap)
         {

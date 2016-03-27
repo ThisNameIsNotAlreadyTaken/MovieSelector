@@ -4,15 +4,33 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
+        Title="MovieInfoGrabber" Height="450" Width="750" Icon="../Resources/icon.png">
     <Grid>
-        <DockPanel>
-            <StackPanel DockPanel.Dock="Right">
-                <Button Name="AddDirectory" Click="AddDirectory_OnClick">Add</Button>
-                <Button Name="RemoveDirectory" Click="RemoveDirectory_OnClick">Remove</Button>
-                <Button Name="ScanForInfo" Command="{Binding ScanForInfoCommand}">Scan</Button>
-            </StackPanel>
-            <ListBox Name="LbDirectories" ItemsSource="{Binding Directories}"></ListBox>
-        </DockPanel>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="129*"></ColumnDefinition>
+            <ColumnDefinition Width="167*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="280*"></RowDefinition>
+            <RowDefinition Height="39*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <ListBox Name="LbDirectories" ItemsSource="{Binding Directories}" Margin="10,10,0,0"></ListBox>
+        <StackPanel Grid.Column="0" Grid.Row="1" Orientation="Horizontal" VerticalAlignment="Center">
+            <Button Name="AddDirectory" Click="AddDirectory_OnClick" Margin="10,0,10,0" IsEnabled="{Binding NotProcessing}" Width="63">Add</Button>
+            <Button Name="RemoveDirectory" Click="RemoveDirectory_OnClick" Margin="0,0,10,0" IsEnabled="{Binding NotProcessing}" Width="81">Remove</Button>
+            <Button Name="ScanForInfo" Command="{Binding ScanForInfoCommand}" IsEnabled="{Binding NotProcessing}" Width="73">Scan</Button>
+        </StackPanel>
+        <ScrollViewer Grid.Column="1" Grid.Row="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Margin="10,10,0,0">
+            <TextBlock Name="LogRichTextBox" Text="{Binding Log}" TextTrimming="CharacterEllipsis" ScrollViewer.CanContentScroll="True">
+
+            </TextBlock>
+        </ScrollViewer>
+        <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Height="16" Margin="0,0,0,0">
+            <TextBlock Margin="0,0,10,0">Total Count: <Bold><TextBlock Text="{Binding MovieListCount}"></TextBlock></Bold></TextBlock>
+            <TextBlock Margin="0,0,10,0">LeftToAnalyze: <Bold><TextBlock Text="{Binding LeftToAnalyze}"></TextBlock></Bold></TextBlock>
+            <TextBlock Margin="0,0,10,0">Found: <Bold><TextBlock Text="{Binding Found}"></TextBlock></Bold></TextBlock>
+            <TextBlock>NotFound: <Bold><TextBlock Text="{Binding NotFound}"></TextBlock></Bold></TextBlock>
+            <TextBlock></TextBlock>
+        </StackPanel>
     </Grid>
 </Window>

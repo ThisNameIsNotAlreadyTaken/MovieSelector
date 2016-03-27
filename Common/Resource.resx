@@ -120,4 +120,13 @@
   <data name="Extensions" xml:space="preserve">
     <value>.avi,.mkv,.m4v</value>
   </data>
+  <data name="KinopoiskApiUrl" xml:space="preserve">
+    <value>http://api.kinopoisk.cf</value>
+  </data>
+  <data name="QIMDBUrl" xml:space="preserve">
+    <value>http://api.qimdb.com/online</value>
+  </data>
+  <data name="YandexImagesUrl" xml:space="preserve">
+    <value>http://st.kp.yandex.net/images/</value>
+  </data>
 </root>
