@@ -8,6 +8,7 @@ using System.Linq;
 using System.Windows.Input;
 using Common.Instrastructure;
 using Common.Models;
+using Newtonsoft.Json;
 
 namespace MovieSelector.ViewModels
 {
@@ -16,6 +17,10 @@ namespace MovieSelector.ViewModels
         private List<Movie> _movieList = new List<Movie>();
 
         private readonly Random _rnd = new Random();
+
+        private List<KinopoiskInfo> LocalInfoList { get; set; }
+
+        public string LocalInfoFileName { get; set; }
 
         private int _counter;
 
@@ -45,9 +50,19 @@ namespace MovieSelector.ViewModels
 
         public MovieSelectorViewModel()
         {
-            //TODO: if on start directories aren't empty, fill movieList
             Directories = new ObservableCollection<string>();
             Directories.CollectionChanged += OnDirectoriesCollectionChanged;
+
+            var storedDirectories = ResourceHelper.Resources.Directories;
+
+            storedDirectories?.ForEach(x => Directories.Add(x));
+
+            var storedInfoFile = ResourceHelper.Resources.LocalFile;
+
+            if (!string.IsNullOrEmpty(storedInfoFile))
+            {
+                AddInfoFile(storedInfoFile);
+            }
         }
         
         private void OnDirectoriesCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -102,6 +117,55 @@ namespace MovieSelector.ViewModels
                 SelectedMovie = null;
             }
             NotifyPropertyChanged("Directories");
+        }
+
+        public void AddInfoFile(string path)
+        {
+            LocalInfoList = null;
+            LocalInfoFileName = null;
+
+            try
+            {
+                if (!File.Exists(path)) return;
+
+                using (var file = File.OpenText(path))
+                {
+                    using (var jReader = new JsonTextReader(file))
+                    {
+                        var serializer = new JsonSerializer();
+                        var list = serializer.Deserialize<List<KinopoiskInfo>>(jReader);
+
+                        if (!list.Any()) return;
+
+                        LocalInfoFileName = path;
+                        LocalInfoList = list;
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                // ignored
+            }
+            finally
+            {
+                NotifyPropertyChanged("LocalInfoList");
+                NotifyPropertyChanged("LocalInfoFileName");
+            }
+        }
+
+        public void SavePreferences()
+        {
+            if (Directories != null && Directories.Any())
+            {
+                ResourceHelper.Resources.Directories = Directories.ToList();
+            }
+
+            if (LocalInfoFileName != null)
+            {
+                ResourceHelper.Resources.LocalFile = LocalInfoFileName;
+            }
+
+            ResourceHelper.SavePreferences();
         }
     }
 }

@@ -3,13 +3,113 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:shell="http://schemas.microsoft.com/winfx/2006/xaml/presentation/shell"
+        xmlns:converters="clr-namespace:Common.Instrastructure.Converters;assembly=Common"
         mc:Ignorable="d"
-        Title="Pick directories" Height="300" Width="300" WindowStyle="ToolWindow">
-    <DockPanel>
-        <StackPanel DockPanel.Dock="Right">
-            <Button Name="AddDirectory" Click="AddDirectory_OnClick">Add</Button>
-            <Button Name="RemoveDirectory" Click="RemoveDirectory_OnClick">Remove</Button>
-        </StackPanel>
-        <ListBox Name="LbDirectories" ItemsSource="{Binding Directories}"></ListBox>
-    </DockPanel>
+        Title="Pick directories" Height="300" Width="500">
+    <shell:WindowChrome.WindowChrome>
+        <shell:WindowChrome
+            ResizeBorderThickness="6"
+            CaptionHeight="60"
+            CornerRadius="0,0,0,0"
+            GlassFrameThickness="0">
+        </shell:WindowChrome>
+    </shell:WindowChrome.WindowChrome>
+    <Window.Resources>
+        <converters:NullCollapsedVisibilityConverter x:Key="NullCollapsedVisibilityConverter" />
+        <converters:AntiNullCollapsedVisibilityConverter x:Key="AntiNullCollapsedVisibilityConverter" />
+    </Window.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Border Grid.RowSpan="2" BorderThickness="1" BorderBrush="Silver">
+            <Border.Background>
+                <LinearGradientBrush StartPoint="0.5,0"
+				   EndPoint="0.5,1">
+                    <GradientStop Color="White" Offset="0" />
+                    <GradientStop Color="Snow" Offset="1" />
+                </LinearGradientBrush>
+            </Border.Background>
+        </Border>
+
+        <Border Grid.Row="0">
+            <Grid>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Border Grid.ColumnSpan="2">
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                                <GradientStop Color="#800080" Offset="0" />
+                                <GradientStop Color="#800080" Offset="1" />
+                            </LinearGradientBrush>
+                        </Border.Background>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="99*"></ColumnDefinition>
+                                <ColumnDefinition Width="65*"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Left" Margin="10,0,0,0">
+                                <Label Foreground="Snow" HorizontalAlignment="Left" FontSize="30" 
+                                       FontStretch="UltraExpanded" Margin="10,0,0,0">Settings</Label>
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Right" Height="30">
+                                <Button Name="MinimizeButton" Style="{StaticResource WindowButtonStyle}" Content="0"
+                             shell:WindowChrome.IsHitTestVisibleInChrome="True" Click="MinimizeClick" />
+                                <Button Name="RestoreButton" Style="{StaticResource WindowButtonStyle}" Content="1" 
+                             shell:WindowChrome.IsHitTestVisibleInChrome="True" Click="RestoreClick" />
+                                <Button Name="CloseButton" Style="{StaticResource WindowButtonStyle}" Content="r" 
+                             shell:WindowChrome.IsHitTestVisibleInChrome="True" Click="CloseClick"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                </Grid>
+            </Grid>
+        </Border>
+
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="178*"></RowDefinition>
+                <RowDefinition Height="41*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <ListBox Name="LbDirectories" ItemsSource="{Binding Directories}"></ListBox>
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition Width="3*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" Margin="10,0,0,0">
+                    <Button Name="AddDirectory" Style="{StaticResource WindowColoredButtonStyle}" FontFamily="Segoe UI Symbol" 
+                      FontSize="30" Content="&#x2795;" Click="AddDirectory_OnClick" Margin="0,0,10,0"  
+                      ToolTip="Add directory" VerticalAlignment="Top"/>
+                    <Button Name="RemoveDirectory" Style="{StaticResource WindowColoredButtonStyle}" FontFamily="Segoe UI Symbol" 
+                      FontSize="30" Content="&#x2796;" Click="RemoveDirectory_OnClick" Margin="0,0,10,0"  
+                      ToolTip="Remove directory" VerticalAlignment="Top"/>
+                </StackPanel>
+                <StackPanel Grid.Column="1" DockPanel.Dock="Right" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Label VerticalAlignment="Top" FontSize="20" Margin="0,5,0,0">Local info file:</Label>
+                    <Label FontFamily="Segoe UI Symbol" Foreground="MediumSeaGreen"  VerticalAlignment="Top" FontSize="25" 
+                       Content="&#x2714;" Visibility="{Binding LocalInfoFileName, Converter={StaticResource NullCollapsedVisibilityConverter}}" 
+                       ToolTip="{Binding LocalInfoFileName}"/>
+                    <Label FontFamily="Segoe UI Symbol" Foreground="Crimson"  VerticalAlignment="Top" FontSize="25" 
+                       Content="&#x2718;" Visibility="{Binding LocalInfoFileName, Converter={StaticResource AntiNullCollapsedVisibilityConverter}}" 
+                       ToolTip="No file used"/>
+                    <Button Name="BrowseFile" Style="{StaticResource WindowColoredButtonStyle}" FontFamily="Segoe UI Symbol" 
+                      FontSize="30" Content="&#x270E;" Click="BrowseFile_OnClick" Margin="0,0,10,0"  
+                      ToolTip="Select local info file" VerticalAlignment="Top"/>
+                </StackPanel>
+            </Grid>
+        </Grid>
+    </Grid>
 </Window>

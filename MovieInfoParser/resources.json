@@ -1,0 +1,6 @@
+﻿{
+  "ExtensionArray": [ ".avi", ".mkv", ".m4v" ],
+  "KinopoiskApiUrl": 	"http://api.kinopoisk.cf",
+  "QIMDBUrl": 	"http://api.qimdb.com/online",	
+  "YandexImagesUrl": 	"http://st.kp.yandex.net/images/"	
+}

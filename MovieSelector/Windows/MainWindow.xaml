@@ -141,7 +141,7 @@
                         <Button Name="SelectMovie" Style="{StaticResource WindowColoredButtonStyle}" FontFamily="Segoe UI Symbol" 
                       FontSize="33" Content="&#xE19E;" Command="{Binding SelectMovieCommand}" Margin="0,5,10,0"
                       Visibility="{Binding Directories, Converter={StaticResource ListCountVisibilityConverter}}"   
-                      ToolTip="Get next movie" VerticalAlignment="Top"/>
+                      ToolTip="Get next movie" VerticalAlignment="Center"/>
                         <Button Name="PlayMovie" Style="{StaticResource WindowColoredButtonStyle}" FontFamily="Segoe UI Symbol" 
                       FontSize="30" Content="&#xE0A2;" Command="{Binding PlayMovieCommand}"
                       Visibility="{Binding SelectedMovie, Converter={StaticResource NullVisibilityConverter}}"          

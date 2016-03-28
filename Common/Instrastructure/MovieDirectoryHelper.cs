@@ -14,7 +14,7 @@ namespace Common.Instrastructure
             foreach (var directory in foldersList.Where(Directory.Exists))
             {
                 res.AddRange(Directory.GetFiles(directory, "*", SearchOption.AllDirectories).ToList()
-                    .Where(x => CommonHelper.ExtensionArray.Any(x.EndsWith))
+                    .Where(x => ResourceHelper.Resources.ExtensionArray.Any(x.EndsWith))
                     .Select(x => new Movie(x)));
             }
 

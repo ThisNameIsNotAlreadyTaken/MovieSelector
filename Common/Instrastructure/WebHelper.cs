@@ -30,7 +30,7 @@ namespace Common.Instrastructure
             var attemptCnt = 0;
             var gotResult = false;
             string result = null;
-            var queryString = CommonHelper.QimdbUrl + string.Format(QimbdParamString, movie.FileNameWithoutExtension);
+            var queryString = ResourceHelper.Resources.QimdbUrl + string.Format(QimbdParamString, movie.FileNameWithoutExtension);
 
             using (var client = new HttpClient())
             {
@@ -72,7 +72,7 @@ namespace Common.Instrastructure
             var gotResult = false;
             string result = null;
 
-            var queryString = CommonHelper.KinopoiskApiUrl +
+            var queryString = ResourceHelper.Resources.KinopoiskApiUrl +
                               string.Format(KinopoiskSearchFilmByNameParamString,
                                   movie.FileNameWithoutExtension.Replace(' ', '_'));
 
@@ -116,7 +116,7 @@ namespace Common.Instrastructure
             var gotResult = false;
             KinopoiskInfo result = null;
 
-            var queryString = CommonHelper.KinopoiskApiUrl + string.Format(KinopoiskSearchFilmByIdParamString, id);
+            var queryString = ResourceHelper.Resources.KinopoiskApiUrl + string.Format(KinopoiskSearchFilmByIdParamString, id);
 
             using (var client = new HttpClient())
             {
@@ -153,7 +153,7 @@ namespace Common.Instrastructure
             var gotResult = false;
             byte[] result = null;
 
-            var queryString = CommonHelper.YandexImagesUrl + info.PosterUrl;
+            var queryString = ResourceHelper.Resources.YandexImagesUrl + info.PosterUrl;
 
             using (var client = new HttpClient())
             {

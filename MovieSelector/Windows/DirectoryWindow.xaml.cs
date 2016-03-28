@@ -35,6 +35,34 @@ namespace MovieSelector.Windows
             }
         }
 
+        private void BrowseFile_OnClick(object sender, RoutedEventArgs e)
+        {
+            var vm = (OpenDialogViewModel)new OpenDialogView().DataContext;
+
+            vm.FileFilterExtensions.Clear();
+            vm.FileFilterExtensions.Add(".json");
+            vm.StartupLocation = WindowStartupLocation.CenterScreen;
+
+            if (vm.Show() != true) return;
+
+            ((MovieSelectorViewModel)DataContext).AddInfoFile(vm.SelectedFilePath);
+        }
+
+        protected void MinimizeClick(object sender, RoutedEventArgs e)
+        {
+            WindowState = WindowState.Minimized;
+        }
+
+        protected void RestoreClick(object sender, RoutedEventArgs e)
+        {
+            WindowState = (WindowState == WindowState.Normal) ? WindowState.Maximized : WindowState.Normal;
+        }
+
+        protected void CloseClick(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
+
         protected override void OnClosing(CancelEventArgs e)
         {
             e.Cancel = true;
