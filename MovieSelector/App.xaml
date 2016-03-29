@@ -1,7 +1,8 @@
 ﻿<Application x:Class="MovieSelector.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             Startup="Application_StartUp">
+             Startup="Application_StartUp"
+             ShutdownMode="OnMainWindowClose">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>

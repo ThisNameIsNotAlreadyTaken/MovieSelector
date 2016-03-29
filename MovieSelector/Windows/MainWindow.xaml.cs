@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using System.Windows;
+﻿using System.Windows;
 using MovieSelector.ViewModels;
 
 namespace MovieSelector.Windows
@@ -39,12 +38,8 @@ namespace MovieSelector.Windows
         protected void CloseClick(object sender, RoutedEventArgs e)
         {
             ((MovieSelectorViewModel)DataContext).SavePreferences();
-            Close();
-        }
-
-        protected override void OnClosing(CancelEventArgs e)
-        {
             _dWindow.Close();
+            Close();
         }
     }
 }
