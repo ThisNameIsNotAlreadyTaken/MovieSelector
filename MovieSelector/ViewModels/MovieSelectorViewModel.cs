@@ -5,6 +5,7 @@ using System.Collections.Specialized;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Windows.Controls;
 using System.Windows.Input;
 using Common.Instrastructure;
 using Common.Models;
@@ -27,6 +28,8 @@ namespace MovieSelector.ViewModels
         private Movie _selectedMovie;
 
         public ObservableCollection<string> Directories { get; set;}
+
+        public bool Processing { get; set; } = false;
 
         public Movie SelectedMovie
         {
@@ -55,11 +58,14 @@ namespace MovieSelector.ViewModels
 
             var storedDirectories = ResourceHelper.Resources.Directories;
 
-            storedDirectories?.ForEach(x => Directories.Add(x));
+            storedDirectories?.ForEach(x =>
+            {
+                if (Directory.Exists(x)) Directories.Add(x);
+            });
 
             var storedInfoFile = ResourceHelper.Resources.LocalFile;
 
-            if (!string.IsNullOrEmpty(storedInfoFile))
+            if (!string.IsNullOrEmpty(storedInfoFile) && File.Exists(storedInfoFile))
             {
                 AddInfoFile(storedInfoFile);
             }
@@ -71,15 +77,42 @@ namespace MovieSelector.ViewModels
         }
 
 
-        private void SelectMovie()
+        private async void SelectMovie()
         {
             if (!_movieList.Any()) return;
 
+            Processing = true;
+            NotifyPropertyChanged("Processing");
+
             var value = _rnd.Next(_movieList.Count());
 
-            SelectedMovie = _movieList[value];
+            var selectedMovie = _movieList[value];
+
+            if (selectedMovie.KinopoiskInfo?.Id == null)
+            {
+                if (WebHelper.IsInternetConnectionAvailable)
+                {
+                    selectedMovie.KinopoiskInfo = await WebHelper.GetMovieInfo(selectedMovie, 1, 1);
+                }
+
+                if (selectedMovie.KinopoiskInfo?.Id == null && LocalInfoList != null)
+                {
+                    selectedMovie.KinopoiskInfo =
+                        LocalInfoList.FirstOrDefault(x => x.RelatedFileName == selectedMovie.FileNameWithoutExtension);
+                }
+
+                if (selectedMovie.KinopoiskInfo == null)
+                {
+                    selectedMovie.KinopoiskInfo = new KinopoiskInfo();
+                }
+            }
+
+            SelectedMovie = selectedMovie;
 
             Counter++;
+
+            Processing = false;
+            NotifyPropertyChanged("Processing");
         }
 
         public ICommand SelectMovieCommand => new DelegateCommand(SelectMovie);

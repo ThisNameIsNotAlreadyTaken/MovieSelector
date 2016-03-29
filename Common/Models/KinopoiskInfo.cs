@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Common.Instrastructure;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
@@ -62,5 +63,29 @@ namespace Common.Models
         }
 
         public string RelatedFileName { get; set; }
+
+        [JsonIgnore]
+        public string Directors
+        {
+            get
+            {
+                var directors = Participants?.FirstOrDefault(x => x.FirstOrDefault(y => y.Profession == Profession.Director) != null)?
+                        .Select(x => x.Name);
+
+                return directors != null ? string.Join(", ", directors) : null;
+            }
+        }
+
+        [JsonIgnore]
+        public string Actors
+        {
+            get
+            {
+                var actors = Participants?.FirstOrDefault(x => x.FirstOrDefault(y => y.Profession == Profession.Actor) != null)?
+                        .Select(x => x.Name);
+
+                return actors != null ?string.Join(", ", actors) : null;
+            }
+        }
     }
 }

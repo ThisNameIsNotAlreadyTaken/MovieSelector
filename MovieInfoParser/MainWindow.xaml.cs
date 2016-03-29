@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.ComponentModel;
+using System.Windows;
 using Gat.Controls;
 using MovieInfoParser.ViewModels;
 
@@ -33,6 +34,11 @@ namespace MovieInfoParser
             {
                 ((MovieInfoParserViewModel)DataContext).RemoveDirectory(LbDirectories.SelectedItem as string);
             }
+        }
+
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            ((MovieInfoParserViewModel)DataContext).SavePreferences();
         }
     }
 }

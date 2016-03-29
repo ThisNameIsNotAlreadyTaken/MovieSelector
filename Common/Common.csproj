@@ -71,6 +71,9 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Instrastructure\Converters\BoolToVisibilityConverter.cs" />
+    <Compile Include="Instrastructure\Converters\DoubleToPercentRatingConverter.cs" />
+    <Compile Include="Instrastructure\Converters\NullToUnknownStringConverter.cs" />
     <Compile Include="Instrastructure\ResourceHelper.cs" />
     <Compile Include="Instrastructure\Converters\AntiListCountVisibilityConverter.cs" />
     <Compile Include="Instrastructure\Converters\AntiNullCollapsedVisibilityConverter.cs" />

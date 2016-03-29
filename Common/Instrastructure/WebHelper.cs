@@ -21,11 +21,15 @@ namespace Common.Instrastructure
 
         private static readonly Regex KinopoiskIdByNameRegex = new Regex("id\\\":\\\"[0-9]+\\\",");
 
+        private static readonly Regex KinopoiskPreviewImageRegex = new Regex("preview\\\":\\\".+?\\\",");
+
         private const string KinopoiskSearchFilmByNameParamString = "/searchFilms?keyword={0}";
 
         private const string KinopoiskSearchFilmByIdParamString = "/getFilm?filmID={0}";
 
-        private static async Task<string> GetKinopoiskIdFromQimbdByNameAsync(Movie movie)
+        private const string KinopoiskGetFilmGalleryByIdParamString = "/getGallery?filmID={0}";
+
+        private static async Task<string> GetKinopoiskIdFromQimbdByNameAsync(Movie movie, int attemptCount, int reconnectTime)
         {
             var attemptCnt = 0;
             var gotResult = false;
@@ -34,7 +38,7 @@ namespace Common.Instrastructure
 
             using (var client = new HttpClient())
             {
-                while (!gotResult && attemptCnt < 3)
+                while (!gotResult && attemptCnt < attemptCount)
                 {
                     try
                     {
@@ -56,7 +60,7 @@ namespace Common.Instrastructure
                     }
                     catch (Exception)
                     {
-                        await Task.Delay(TimeSpan.FromSeconds(10)).ConfigureAwait(false);
+                        await Task.Delay(TimeSpan.FromSeconds(reconnectTime)).ConfigureAwait(false);
                     }
 
                     attemptCnt++;
@@ -66,7 +70,7 @@ namespace Common.Instrastructure
             return result;
         }
 
-        private static async Task<string> GetKinopoiskIdFromUnOfficialApiBaseByNameAsync(Movie movie)
+        private static async Task<string> GetKinopoiskIdFromUnOfficialApiBaseByNameAsync(Movie movie, int attemptCount, int reconnectTime)
         {
             var attemptCnt = 0;
             var gotResult = false;
@@ -78,7 +82,7 @@ namespace Common.Instrastructure
 
             using (var client = new HttpClient())
             {
-                while (!gotResult && attemptCnt < 3)
+                while (!gotResult && attemptCnt < attemptCount)
                 {
                     try
                     {
@@ -100,7 +104,7 @@ namespace Common.Instrastructure
                     }
                     catch (Exception)
                     {
-                        await Task.Delay(TimeSpan.FromSeconds(10)).ConfigureAwait(false);
+                        await Task.Delay(TimeSpan.FromSeconds(reconnectTime)).ConfigureAwait(false);
                     }
 
                     attemptCnt++;
@@ -110,7 +114,7 @@ namespace Common.Instrastructure
             return result;
         }
 
-        private static async Task<KinopoiskInfo> GetKinopoiskInfoFromUnOfficialApiBaseByIdAsync(string id)
+        private static async Task<KinopoiskInfo> GetKinopoiskInfoFromUnOfficialApiBaseByIdAsync(string id, int attemptCount, int reconnectTime)
         {
             var attemptCnt = 0;
             var gotResult = false;
@@ -120,7 +124,7 @@ namespace Common.Instrastructure
 
             using (var client = new HttpClient())
             {
-                while (!gotResult && attemptCnt < 3)
+                while (!gotResult && attemptCnt < attemptCount)
                 {
                     try
                     {
@@ -137,7 +141,7 @@ namespace Common.Instrastructure
                     }
                     catch (Exception)
                     {
-                        await Task.Delay(TimeSpan.FromSeconds(10)).ConfigureAwait(false);
+                        await Task.Delay(TimeSpan.FromSeconds(reconnectTime)).ConfigureAwait(false);
                     }
 
                     attemptCnt++;
@@ -147,31 +151,44 @@ namespace Common.Instrastructure
             return result;
         }
 
-        private static async Task<byte[]> GetImageByInfo(KinopoiskInfo info)
+        private static async Task<byte[]> GetImageByInfo(KinopoiskInfo info, int attemptCount, int reconnectTime)
         {
             var attemptCnt = 0;
             var gotResult = false;
             byte[] result = null;
 
-            var queryString = ResourceHelper.Resources.YandexImagesUrl + info.PosterUrl;
+            var imageUrlQueryString = ResourceHelper.Resources.KinopoiskApiUrl + string.Format(KinopoiskGetFilmGalleryByIdParamString, info.Id);
 
             using (var client = new HttpClient())
             {
-                while (!gotResult && attemptCnt < 3)
+                while (!gotResult && attemptCnt < attemptCount)
                 {
                     try
                     {
-                        var data = await client.GetByteArrayAsync(queryString);
+                        var data = await client.GetStringAsync(imageUrlQueryString);
 
-                        if (data != null && data.Length > 0)
+                        var potentialUrl = KinopoiskPreviewImageRegex.Matches(data);
+
+                        if (potentialUrl.Count > 0)
                         {
-                            result = data;
-                            gotResult = true;
+                           var urlMatch = potentialUrl[0].Value.Split(new []{'"'}, StringSplitOptions.RemoveEmptyEntries);
+
+                            if (urlMatch.Length >= 3)
+                            {
+                                var url = urlMatch[2];
+                                var image = await client.GetByteArrayAsync(ResourceHelper.Resources.YandexImagesUrl + url);
+
+                                if (image != null && image.Length > 0)
+                                {
+                                    result = image;
+                                    gotResult = true;
+                                }
+                            }
                         }
                     }
                     catch (Exception)
                     {
-                        await Task.Delay(TimeSpan.FromSeconds(10)).ConfigureAwait(false);
+                        await Task.Delay(TimeSpan.FromSeconds(reconnectTime)).ConfigureAwait(false);
                     }
 
                     attemptCnt++;
@@ -180,19 +197,19 @@ namespace Common.Instrastructure
             return result;
         }
 
-        public static async Task<KinopoiskInfo> GetMovieInfo(Movie movie)
+        public static async Task<KinopoiskInfo> GetMovieInfo(Movie movie, int attemptsCount = 3, int reconnectTime = 10)
         {
-            var kinopoiskId = await GetKinopoiskIdFromUnOfficialApiBaseByNameAsync(movie) ??
-                              await GetKinopoiskIdFromQimbdByNameAsync(movie);
+            var kinopoiskId = await GetKinopoiskIdFromUnOfficialApiBaseByNameAsync(movie, attemptsCount, reconnectTime) ??
+                              await GetKinopoiskIdFromQimbdByNameAsync(movie, attemptsCount, reconnectTime);
 
             if (kinopoiskId == null) return null;
 
-            var info = await GetKinopoiskInfoFromUnOfficialApiBaseByIdAsync(kinopoiskId);
+            var info = await GetKinopoiskInfoFromUnOfficialApiBaseByIdAsync(kinopoiskId, attemptsCount, reconnectTime);
 
             if (info == null) return null;
 
             info.RelatedFileName = movie.FileNameWithoutExtension;
-            var image = await GetImageByInfo(info);
+            var image = await GetImageByInfo(info, attemptsCount, reconnectTime);
             info.Poster = image;
 
             return info;

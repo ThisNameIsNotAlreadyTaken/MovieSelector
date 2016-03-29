@@ -9,7 +9,7 @@
                 <ResourceDictionary Source="Themes/Metro/Metro.MSControls.Toolkit.Implicit.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
-            <BitmapImage x:Key="NoImage" UriSource="../Resources/no_image.png"></BitmapImage>
+            <BitmapImage x:Key="NoImage" UriSource="Resources/no_image.png"></BitmapImage>
 
             <!--  Button styles -->
             <Style TargetType="{x:Type Button}" x:Key="WindowButtonStyle">
@@ -81,6 +81,7 @@
                     </Trigger>
                 </Style.Triggers>
             </Style>
+
         </ResourceDictionary>
     </Application.Resources>
 </Application>

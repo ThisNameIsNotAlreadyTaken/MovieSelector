@@ -17,8 +17,14 @@ namespace MovieInfoParser.ViewModels
 
         public MovieInfoParserViewModel()
         {
-            //TODO: if on start directories aren't empty, fill movieList
             Directories = new ObservableCollection<string>();
+
+            var storedDirectories = ResourceHelper.Resources.Directories;
+
+            storedDirectories?.ForEach(x =>
+            {
+                if (Directory.Exists(x)) Directories.Add(x);
+            });
         }
 
         public StringBuilder Log { get; set; } = new StringBuilder();
@@ -136,5 +142,15 @@ namespace MovieInfoParser.ViewModels
         }
 
         public ICommand ScanForInfoCommand => new DelegateCommand(ScanForInfo);
+
+        public void SavePreferences()
+        {
+            if (Directories != null && Directories.Any())
+            {
+                ResourceHelper.Resources.Directories = Directories.ToList();
+            }
+
+            ResourceHelper.SavePreferences();
+        }
     }
 }
