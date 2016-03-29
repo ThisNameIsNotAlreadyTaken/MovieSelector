@@ -9,7 +9,7 @@
         xmlns:controls="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.Toolkit"
         Icon="../Resources/icon.png"
         Title="Movie Selector"
-        Width="700" Height="400">
+        Width="700" Height="400" WindowStartupLocation="CenterScreen">
     <shell:WindowChrome.WindowChrome>
         <shell:WindowChrome
             ResizeBorderThickness="6"

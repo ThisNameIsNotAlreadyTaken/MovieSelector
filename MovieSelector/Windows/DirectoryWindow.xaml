@@ -6,7 +6,7 @@
         xmlns:shell="http://schemas.microsoft.com/winfx/2006/xaml/presentation/shell"
         xmlns:converters="clr-namespace:Common.Instrastructure.Converters;assembly=Common"
         mc:Ignorable="d"
-        Title="Pick directories" Height="300" Width="500">
+        Title="Pick directories" Height="300" Width="500" WindowStartupLocation="CenterOwner">
     <shell:WindowChrome.WindowChrome>
         <shell:WindowChrome
             ResizeBorderThickness="6"
