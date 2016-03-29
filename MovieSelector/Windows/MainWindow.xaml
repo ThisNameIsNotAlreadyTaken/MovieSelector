@@ -69,7 +69,7 @@
                                 <ColumnDefinition Width="99*"></ColumnDefinition>
                                 <ColumnDefinition Width="65*"></ColumnDefinition>
                             </Grid.ColumnDefinitions>
-                            <StackPanel Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Left" Margin="10,0,0,0" Width="259">
+                            <StackPanel Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Left" Margin="10,0,0,0">
                                 <Button Name="DirectoryDialogShow" Style="{StaticResource WindowButtonStyle}" FontFamily="Segoe UI Symbol" 
                                       FontSize="30" Content="&#xE0D5;" shell:WindowChrome.IsHitTestVisibleInChrome="True" Click="DirectoryDialogShowClick"
                                        ToolTip="Select directories to scan" />
