@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="MovieInfoGrabber" Height="450" Width="750" Icon="../Resources/icon.png">
+        Title="MovieInfoGrabber" Height="450" Width="750" Icon="Resources/icon.png">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="129*"></ColumnDefinition>

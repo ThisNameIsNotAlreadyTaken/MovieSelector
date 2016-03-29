@@ -5,7 +5,6 @@ using System.Collections.Specialized;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Windows.Controls;
 using System.Windows.Input;
 using Common.Instrastructure;
 using Common.Models;
@@ -29,7 +28,7 @@ namespace MovieSelector.ViewModels
 
         public ObservableCollection<string> Directories { get; set;}
 
-        public bool Processing { get; set; } = false;
+        public bool Processing { get; set; }
 
         public Movie SelectedMovie
         {
