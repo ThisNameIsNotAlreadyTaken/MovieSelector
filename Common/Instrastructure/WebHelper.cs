@@ -21,13 +21,9 @@ namespace Common.Instrastructure
 
         private static readonly Regex KinopoiskIdByNameRegex = new Regex("id\\\":\\\"[0-9]+\\\",");
 
-        private static readonly Regex KinopoiskPreviewImageRegex = new Regex("preview\\\":\\\".+?\\\",");
-
         private const string KinopoiskSearchFilmByNameParamString = "/searchFilms?keyword={0}";
 
         private const string KinopoiskSearchFilmByIdParamString = "/getFilm?filmID={0}";
-
-        private const string KinopoiskGetFilmGalleryByIdParamString = "/getGallery?filmID={0}";
 
         private static async Task<string> GetKinopoiskIdFromQimbdByNameAsync(Movie movie, int attemptCount, int reconnectTime)
         {
@@ -157,7 +153,7 @@ namespace Common.Instrastructure
             var gotResult = false;
             byte[] result = null;
 
-            var imageUrlQueryString = ResourceHelper.Resources.KinopoiskApiUrl + string.Format(KinopoiskGetFilmGalleryByIdParamString, info.Id);
+            var queryString = ResourceHelper.Resources.YandexImagesUrl + info.PosterUrl.Replace("iphone90", "iphone360");
 
             using (var client = new HttpClient())
             {
@@ -165,25 +161,12 @@ namespace Common.Instrastructure
                 {
                     try
                     {
-                        var data = await client.GetStringAsync(imageUrlQueryString);
+                        var data = await client.GetByteArrayAsync(queryString);
 
-                        var potentialUrl = KinopoiskPreviewImageRegex.Matches(data);
-
-                        if (potentialUrl.Count > 0)
+                        if (data != null && data.Length > 0)
                         {
-                           var urlMatch = potentialUrl[0].Value.Split(new []{'"'}, StringSplitOptions.RemoveEmptyEntries);
-
-                            if (urlMatch.Length >= 3)
-                            {
-                                var url = urlMatch[2];
-                                var image = await client.GetByteArrayAsync(ResourceHelper.Resources.YandexImagesUrl + url);
-
-                                if (image != null && image.Length > 0)
-                                {
-                                    result = image;
-                                    gotResult = true;
-                                }
-                            }
+                            result = data;
+                            gotResult = true;
                         }
                     }
                     catch (Exception)
