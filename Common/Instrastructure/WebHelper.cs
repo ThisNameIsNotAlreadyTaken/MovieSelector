@@ -25,6 +25,8 @@ namespace Common.Instrastructure
 
         private const string KinopoiskSearchFilmByIdParamString = "/getFilm?filmID={0}";
 
+        private static readonly string DateParam = string.Format("&date={0}", DateTime.Now.ToString("dd.MM.yyyy"));
+
         private static async Task<string> GetKinopoiskIdFromQimbdByNameAsync(Movie movie, int attemptCount, int reconnectTime)
         {
             var attemptCnt = 0;
@@ -85,17 +87,24 @@ namespace Common.Instrastructure
                         var data = await
                             client.GetStringAsync(queryString);
 
-                        var potentialIds = KinopoiskIdByNameRegex.Matches(data);
-
-                        if (potentialIds.Count > 0)
+                        if (data != null && data != "null")
                         {
-                            var idMatch = NumberRegex.Matches(potentialIds[0].Value);
+                            var potentialIds = KinopoiskIdByNameRegex.Matches(data);
 
-                            if (idMatch.Count > 0)
+                            if (potentialIds.Count > 0)
                             {
-                                result = idMatch[0].Value;
-                                gotResult = true;
+                                var idMatch = NumberRegex.Matches(potentialIds[0].Value);
+
+                                if (idMatch.Count > 0)
+                                {
+                                    result = idMatch[0].Value;
+                                    gotResult = true;
+                                }
                             }
+                        }
+                        else
+                        {
+                            queryString += DateParam;
                         }
                     }
                     catch (Exception)
@@ -127,12 +136,19 @@ namespace Common.Instrastructure
                         var data = await
                             client.GetStringAsync(queryString);
 
-                        var info = JsonConvert.DeserializeObject<KinopoiskInfo>(data);
-
-                        if (info != null)
+                        if (data != null && data != "null")
                         {
-                            result = info;
-                            gotResult = true;
+                            var info = JsonConvert.DeserializeObject<KinopoiskInfo>(data);
+
+                            if (info != null)
+                            {
+                                result = info;
+                                gotResult = true;
+                            }
+                        }
+                        else
+                        {
+                            queryString += DateParam;
                         }
                     }
                     catch (Exception)
@@ -167,6 +183,10 @@ namespace Common.Instrastructure
                         {
                             result = data;
                             gotResult = true;
+                        }
+                        else
+                        {
+                            queryString += DateParam;
                         }
                     }
                     catch (Exception)
