@@ -16,9 +16,21 @@
         </Grid.RowDefinitions>
         <ListBox Name="LbDirectories" ItemsSource="{Binding Directories}" Margin="10,10,0,0"></ListBox>
         <StackPanel Grid.Column="0" Grid.Row="1" Orientation="Horizontal" VerticalAlignment="Center">
-            <Button Name="AddDirectory" Click="AddDirectory_OnClick" Margin="10,0,10,0" IsEnabled="{Binding NotProcessing}" Width="63">Add</Button>
-            <Button Name="RemoveDirectory" Click="RemoveDirectory_OnClick" Margin="0,0,10,0" IsEnabled="{Binding NotProcessing}" Width="81">Remove</Button>
-            <Button Name="ScanForInfo" Command="{Binding ScanForInfoCommand}" IsEnabled="{Binding NotProcessing}" Width="73">Scan</Button>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                </Grid.RowDefinitions>
+                <StackPanel Orientation="Horizontal">
+                    <Button Name="AddDirectory" Click="AddDirectory_OnClick" Margin="10,0,10,0" IsEnabled="{Binding NotProcessing}" Width="63">Add</Button>
+                    <Button Name="RemoveDirectory" Click="RemoveDirectory_OnClick" Margin="0,0,10,0" IsEnabled="{Binding NotProcessing}" Width="81">Remove</Button>
+                    <Button Name="ScanForInfo" Command="{Binding ScanForInfoCommand}" IsEnabled="{Binding NotProcessing}" Width="73">Scan</Button>
+                </StackPanel>
+                <CheckBox Margin="10,5,0,0" Grid.Row="1" Name="SaveLogToFile" IsEnabled="{Binding NotProcessing}" 
+                      IsChecked="{Binding IsSaveLogToFileEnabled, Mode=OneWayToSource}">
+                    Save log to file
+                </CheckBox>
+            </Grid>
         </StackPanel>
         <ScrollViewer Grid.Column="1" Grid.Row="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Margin="10,10,0,0">
             <TextBlock Name="LogRichTextBox" Text="{Binding Log}" TextTrimming="CharacterEllipsis" ScrollViewer.CanContentScroll="True">

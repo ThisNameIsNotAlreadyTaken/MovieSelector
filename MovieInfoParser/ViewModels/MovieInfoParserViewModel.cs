@@ -35,6 +35,7 @@ namespace MovieInfoParser.ViewModels
         public int LeftToAnalyze { get; set; }
         public int Found { get; set; }
         public int NotFound { get; set; }
+        public bool IsSaveLogToFileEnabled { get; set; } = false;
 
         public void AddDirectory(string item)
         {
@@ -95,6 +96,8 @@ namespace MovieInfoParser.ViewModels
 
             SaveInfoListToFile(infoList);
 
+            infoList.Clear();
+
             NotProcessing = true;
             NotifyPropertyChanged("NotProcessing");
         }
@@ -130,14 +133,24 @@ namespace MovieInfoParser.ViewModels
             }
         }
 
-        private static void SaveInfoListToFile(IEnumerable<KinopoiskInfo> infoList)
+        private void SaveInfoListToFile(IEnumerable<KinopoiskInfo> infoList)
         {
-            var fileName = "infos_" + DateTime.Now.Ticks;
+            var ticks = DateTime.Now.Ticks;
+
+            var fileName = "infos_" + ticks;
             var filePath = Path.Combine(Environment.CurrentDirectory, fileName + ".json");
 
             using (var file = File.CreateText(filePath)) {
                 var serializer = new JsonSerializer();
                 serializer.Serialize(file, infoList);
+            }
+
+            if (!IsSaveLogToFileEnabled) return;
+
+            var logFilePath = Path.Combine(Environment.CurrentDirectory, "log_" + ticks + ".txt");
+            using (var writer = new StreamWriter(logFilePath))
+            {
+                writer.WriteLine(Log);
             }
         }
 
