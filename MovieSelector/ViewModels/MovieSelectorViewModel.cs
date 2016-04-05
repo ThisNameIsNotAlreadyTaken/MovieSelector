@@ -272,7 +272,7 @@ namespace MovieSelector.ViewModels
                         SearchBoxWidth = null;
                     }
 
-                    return result;
+                    return result.Take(15);
                 });
             }
         }
