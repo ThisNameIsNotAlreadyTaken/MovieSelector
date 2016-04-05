@@ -77,17 +77,14 @@ namespace MovieSelector.ViewModels
             _movieList = MovieDirectoryHelper.GetMoviesFromFolders(Directories);
         }
 
-
-        private async void SelectMovie()
+        private async void SelectMovie(Movie movie)
         {
             if (!_movieList.Any()) return;
 
             Processing = true;
             NotifyPropertyChanged("Processing");
 
-            var value = _rnd.Next(_movieList.Count());
-
-            var selectedMovie = _movieList[value];
+            var selectedMovie = movie ?? _movieList[_rnd.Next(_movieList.Count)];
 
             if (selectedMovie.KinopoiskInfo?.Id == null)
             {
@@ -110,13 +107,16 @@ namespace MovieSelector.ViewModels
 
             SelectedMovie = selectedMovie;
 
-            Counter++;
+            if (movie == null)
+            {
+                Counter++;
+            }
 
             Processing = false;
             NotifyPropertyChanged("Processing");
         }
 
-        public ICommand SelectMovieCommand => new DelegateCommand(SelectMovie);
+        public ICommand SelectMovieCommand => new DelegateParameterCommand<Movie>(SelectMovie);
 
         private void ResetCounter()
         {
@@ -210,6 +210,22 @@ namespace MovieSelector.ViewModels
             {
                 _searchBoxWidth = value;
                 NotifyPropertyChanged("SearchBoxWidth");
+            }
+        }
+
+        private Movie _searchBoxResult;
+        public Movie SearchBoxResult
+        {
+            get { return _searchBoxResult; }
+            set
+            {
+                _searchBoxResult = value;
+                NotifyPropertyChanged("SearchBoxResult");
+
+                if (value != null)
+                {
+                    SelectMovie(value);
+                }
             }
         }
 

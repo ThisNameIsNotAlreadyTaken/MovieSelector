@@ -135,6 +135,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Infrascturcture\DelegateParameterCommand.cs" />
     <Compile Include="Infrascturcture\Transliter.cs" />
     <Compile Include="ViewModels\MovieSelectorViewModel.cs" />
     <Compile Include="Windows\DirectoryWindow.xaml.cs">

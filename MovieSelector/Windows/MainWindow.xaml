@@ -81,7 +81,8 @@
                                                           shell:WindowChrome.IsHitTestVisibleInChrome="True" Margin="10,3,0,0"
                                                           Watermark="Search movie..." IconPlacement="Left" IconVisibility="Visible"
                                                           Provider="{Binding SProvider}"
-                                                          DisplayMember="FileNameWithoutExtension">
+                                                          DisplayMember="FileNameWithoutExtension"
+                                                          Visibility="{Binding Directories, Converter={StaticResource ListCountVisibilityConverter}}">
                                     <wpf:AutoCompleteTextBox.Resources>
                                         <Style TargetType="{x:Type Popup}">
                                             <Setter Property="MinWidth" Value="{Binding Path=SearchBoxWidth}" />
@@ -89,6 +90,10 @@
                                             <Setter Property="MaxHeight" Value="400" />
                                         </Style>
                                     </wpf:AutoCompleteTextBox.Resources>
+                                    <wpf:AutoCompleteTextBox.SelectedItem>
+                                        <Binding Path="SearchBoxResult" Mode="TwoWay">
+                                        </Binding>
+                                    </wpf:AutoCompleteTextBox.SelectedItem>
                                     <wpf:AutoCompleteTextBox.ItemTemplate>
                                         <DataTemplate DataType="{x:Type models:Movie}">
                                             <Border Padding="5">
