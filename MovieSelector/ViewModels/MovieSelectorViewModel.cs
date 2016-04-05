@@ -235,6 +235,8 @@ namespace MovieSelector.ViewModels
             {
                 return new SuggestionProvider(filter =>
                 {
+                    if (filter == null) return null;
+
                     var result = new List<Movie>();
 
                     var translitFilter = Transliter.TranslitRuToEn(filter);
