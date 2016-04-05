@@ -8,7 +8,9 @@ using System.Linq;
 using System.Windows.Input;
 using Common.Instrastructure;
 using Common.Models;
+using MovieSelector.Infrascturcture;
 using Newtonsoft.Json;
+using WpfControls;
 
 namespace MovieSelector.ViewModels
 {
@@ -198,6 +200,65 @@ namespace MovieSelector.ViewModels
             }
 
             ResourceHelper.SavePreferences();
+        }
+
+        private int? _searchBoxWidth;
+        public int? SearchBoxWidth
+        {
+            get { return _searchBoxWidth; }
+            set
+            {
+                _searchBoxWidth = value;
+                NotifyPropertyChanged("SearchBoxWidth");
+            }
+        }
+
+        public SuggestionProvider SProvider
+        {
+            get
+            {
+                return new SuggestionProvider(filter =>
+                {
+                    var result = new List<Movie>();
+
+                    var translitFilter = Transliter.TranslitRuToEn(filter);
+
+                    result.AddRange(_movieList.Where(
+                        x =>
+                        {
+                            var stringToCompare = x.FileNameWithoutExtension.Trim();
+
+                            return stringToCompare.StartsWith(filter, StringComparison.OrdinalIgnoreCase) ||
+                                   stringToCompare.StartsWith(translitFilter, StringComparison.OrdinalIgnoreCase);
+                        }).ToList());
+
+                    if (!result.Any())
+                    {
+                        var keyboardRuFilter = Transliter.KeyboardEnToRu(filter);
+                        var keyboardEnFilter = Transliter.KeyboardRuToEn(filter);
+
+                        result.AddRange(_movieList.Where(
+                        x =>
+                        {
+                            var stringToCompare = x.FileNameWithoutExtension.Trim();
+
+                            return stringToCompare.StartsWith(keyboardRuFilter, StringComparison.OrdinalIgnoreCase) ||
+                                   stringToCompare.StartsWith(keyboardEnFilter, StringComparison.OrdinalIgnoreCase);
+                        }).ToList());
+                    }
+
+                    if (result.Any())
+                    {
+                        SearchBoxWidth = result.Max(x => x.FileNameWithoutExtension.Length)*7;
+                    }
+                    else
+                    {
+                        SearchBoxWidth = null;
+                    }
+
+                    return result;
+                });
+            }
         }
     }
 }
