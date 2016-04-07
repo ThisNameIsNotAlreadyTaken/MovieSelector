@@ -169,6 +169,8 @@ namespace Common.Instrastructure
             var gotResult = false;
             byte[] result = null;
 
+            if (info.PosterUrl == null) return null;
+
             var queryString = ResourceHelper.Resources.YandexImagesUrl + info.PosterUrl.Replace("iphone90", "iphone360");
 
             using (var client = new HttpClient())
