@@ -252,7 +252,7 @@ namespace MovieSelector.ViewModels
                                    stringToCompare.StartsWith(translitFilter, StringComparison.OrdinalIgnoreCase);
                         }).ToList());
 
-                    if (!result.Any())
+                    if (result.Count < valuesToTake)
                     {
                         var keyboardRuFilter = Transliter.KeyboardEnToRu(filter);
                         var keyboardEnFilter = Transliter.KeyboardRuToEn(filter);
@@ -266,7 +266,7 @@ namespace MovieSelector.ViewModels
                                    stringToCompare.StartsWith(keyboardEnFilter, StringComparison.OrdinalIgnoreCase);
                         }).ToList());
 
-                        if (!result.Any() || result.Count < valuesToTake)
+                        if (result.Count < valuesToTake)
                         {
                             result.AddRange(_movieList.Where(
                                 x =>
@@ -278,7 +278,7 @@ namespace MovieSelector.ViewModels
                                            stringToCompare.IndexOf(translitFilter, StringComparison.OrdinalIgnoreCase) >= 0);
                                 }).ToList());
 
-                            if (!result.Any() || result.Count < valuesToTake)
+                            if (result.Count < valuesToTake)
                             {
                                 result.AddRange(_movieList.Where(
                                x =>
