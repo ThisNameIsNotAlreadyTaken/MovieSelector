@@ -273,8 +273,9 @@ namespace MovieSelector.ViewModels
                                 {
                                     var stringToCompare = x.FileNameWithoutExtension.Trim();
 
-                                    return stringToCompare.IndexOf(filter,  StringComparison.OrdinalIgnoreCase) >= 0 ||
-                                           stringToCompare.IndexOf(translitFilter, StringComparison.OrdinalIgnoreCase) >= 0;
+                                    return !result.Contains(x) && 
+                                           (stringToCompare.IndexOf(filter,  StringComparison.OrdinalIgnoreCase) >= 0 ||
+                                           stringToCompare.IndexOf(translitFilter, StringComparison.OrdinalIgnoreCase) >= 0);
                                 }).ToList());
 
                             if (!result.Any() || result.Count < valuesToTake)
@@ -284,8 +285,9 @@ namespace MovieSelector.ViewModels
                                {
                                    var stringToCompare = x.FileNameWithoutExtension.Trim();
 
-                                   return stringToCompare.IndexOf(keyboardRuFilter, StringComparison.OrdinalIgnoreCase) >= 0 ||
-                                          stringToCompare.IndexOf(keyboardEnFilter, StringComparison.OrdinalIgnoreCase) >= 0;
+                                   return !result.Contains(x) && 
+                                           (stringToCompare.IndexOf(keyboardRuFilter, StringComparison.OrdinalIgnoreCase) >= 0 ||
+                                          stringToCompare.IndexOf(keyboardEnFilter, StringComparison.OrdinalIgnoreCase) >= 0);
                                }).ToList());
                             }
                         }
