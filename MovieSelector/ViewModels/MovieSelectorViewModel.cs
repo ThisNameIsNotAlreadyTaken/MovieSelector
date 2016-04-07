@@ -9,6 +9,7 @@ using System.Windows.Input;
 using Common.Instrastructure;
 using Common.Models;
 using MovieSelector.Infrascturcture;
+using MovieSelector.Windows;
 using Newtonsoft.Json;
 using WpfControls;
 
@@ -131,6 +132,7 @@ namespace MovieSelector.ViewModels
             {
                 Process.Start(SelectedMovie.FullPath);
             }
+            new ErrorWindow(new FileNotFoundException("File not found")).ShowDialog();
         }
 
         public ICommand PlayMovieCommand => new DelegateCommand(PlayMovie);
