@@ -296,7 +296,7 @@ namespace MovieSelector.ViewModels
 
                     if (result.Any())
                     {
-                        SearchBoxWidth = result.Max(x => x.FileNameWithoutExtension.Length)*7;
+                        SearchBoxWidth = Math.Max(150, result.Max(x => x.FileNameWithoutExtension.Length)*7);
                     }
                     else
                     {
