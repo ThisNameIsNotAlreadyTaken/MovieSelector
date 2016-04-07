@@ -235,6 +235,8 @@ namespace MovieSelector.ViewModels
             {
                 return new SuggestionProvider(filter =>
                 {
+                    var valuesToTake = 15;
+
                     if (filter == null) return null;
 
                     var result = new List<Movie>();
@@ -263,6 +265,30 @@ namespace MovieSelector.ViewModels
                             return stringToCompare.StartsWith(keyboardRuFilter, StringComparison.OrdinalIgnoreCase) ||
                                    stringToCompare.StartsWith(keyboardEnFilter, StringComparison.OrdinalIgnoreCase);
                         }).ToList());
+
+                        if (!result.Any() || result.Count < valuesToTake)
+                        {
+                            result.AddRange(_movieList.Where(
+                                x =>
+                                {
+                                    var stringToCompare = x.FileNameWithoutExtension.Trim();
+
+                                    return stringToCompare.IndexOf(filter,  StringComparison.OrdinalIgnoreCase) >= 0 ||
+                                           stringToCompare.IndexOf(translitFilter, StringComparison.OrdinalIgnoreCase) >= 0;
+                                }).ToList());
+
+                            if (!result.Any() || result.Count < valuesToTake)
+                            {
+                                result.AddRange(_movieList.Where(
+                               x =>
+                               {
+                                   var stringToCompare = x.FileNameWithoutExtension.Trim();
+
+                                   return stringToCompare.IndexOf(keyboardRuFilter, StringComparison.OrdinalIgnoreCase) >= 0 ||
+                                          stringToCompare.IndexOf(keyboardEnFilter, StringComparison.OrdinalIgnoreCase) >= 0;
+                               }).ToList());
+                            }
+                        }
                     }
 
                     if (result.Any())
@@ -274,7 +300,7 @@ namespace MovieSelector.ViewModels
                         SearchBoxWidth = null;
                     }
 
-                    return result.Take(15);
+                    return result.Take(valuesToTake);
                 });
             }
         }
