@@ -262,8 +262,9 @@ namespace MovieSelector.ViewModels
                         {
                             var stringToCompare = x.FileNameWithoutExtension.Trim();
 
-                            return stringToCompare.StartsWith(keyboardRuFilter, StringComparison.OrdinalIgnoreCase) ||
-                                   stringToCompare.StartsWith(keyboardEnFilter, StringComparison.OrdinalIgnoreCase);
+                            return !result.Contains(x) && 
+                                   (stringToCompare.StartsWith(keyboardRuFilter, StringComparison.OrdinalIgnoreCase) ||
+                                   stringToCompare.StartsWith(keyboardEnFilter, StringComparison.OrdinalIgnoreCase));
                         }).ToList());
 
                         if (result.Count < valuesToTake)
