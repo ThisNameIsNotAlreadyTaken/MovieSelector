@@ -85,6 +85,7 @@
     <Compile Include="Instrastructure\MovieDirectoryHelper.cs" />
     <Compile Include="Instrastructure\ObservableObject.cs" />
     <Compile Include="Instrastructure\Profession.cs" />
+    <Compile Include="Instrastructure\Transliter.cs" />
     <Compile Include="Instrastructure\WebHelper.cs" />
     <Compile Include="Models\KinopoiskInfo.cs" />
     <Compile Include="Models\Movie.cs" />

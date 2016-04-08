@@ -253,7 +253,8 @@ namespace MovieSelector.ViewModels
 
                     var result = new List<Movie>();
 
-                    var translitFilter = Transliter.TranslitRuToEn(filter);
+                    var translitEnFilter = Transliter.TranslitRuToEn(filter);
+                    var translitRuFilter = Transliter.TranslitEnToRu(filter);
 
                     result.AddRange(_movieList.Where(
                         x =>
@@ -261,7 +262,8 @@ namespace MovieSelector.ViewModels
                             var stringToCompare = x.FileNameWithoutExtension.Trim();
 
                             return stringToCompare.StartsWith(filter, StringComparison.OrdinalIgnoreCase) ||
-                                   stringToCompare.StartsWith(translitFilter, StringComparison.OrdinalIgnoreCase);
+                                   stringToCompare.StartsWith(translitEnFilter, StringComparison.OrdinalIgnoreCase) ||
+                                   stringToCompare.StartsWith(translitRuFilter, StringComparison.OrdinalIgnoreCase);
                         }).ToList());
 
                     if (result.Count < valuesToTake)
@@ -288,7 +290,8 @@ namespace MovieSelector.ViewModels
 
                                     return !result.Contains(x) && 
                                            (stringToCompare.IndexOf(filter,  StringComparison.OrdinalIgnoreCase) >= 0 ||
-                                           stringToCompare.IndexOf(translitFilter, StringComparison.OrdinalIgnoreCase) >= 0);
+                                           stringToCompare.IndexOf(translitEnFilter, StringComparison.OrdinalIgnoreCase) >= 0 ||
+                                           stringToCompare.IndexOf(translitRuFilter, StringComparison.OrdinalIgnoreCase) >= 0);
                                 }).ToList());
 
                             if (result.Count < valuesToTake)

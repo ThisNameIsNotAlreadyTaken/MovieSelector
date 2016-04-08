@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Text;
 
-namespace MovieSelector.Infrascturcture
+namespace Common.Instrastructure
 {
     public static class Transliter
     {
@@ -74,6 +74,74 @@ namespace MovieSelector.Infrascturcture
             {"Э", "E"},
             {"Ю", "Yu"},
             {"Я", "Ya"}
+        };
+
+        private static readonly Dictionary<string, string> TransliterDictionaryEnToRu = new Dictionary<string, string>
+        {
+            {"a", "а"},
+            {"b", "б"},
+            {"v", "в"},
+            {"g", "г"},
+            {"d", "д"},
+            {"e", "е"},
+            {"yo", "ё"},
+            {"zh", "ж"},
+            {"z", "з"},
+            {"i", "и"},
+            {"j", "й"},
+            {"k", "к"},
+            {"l", "л"},
+            {"m", "м"},
+            {"n", "н"},
+            {"o", "о"},
+            {"p", "п"},
+            {"r", "р"},
+            {"s", "с"},
+            {"t", "т"},
+            {"u", "у"},
+            {"f", "ф"},
+            {"h", "х"},
+            {"c", "ц"},
+            {"ch", "ч"},
+            {"sh", "ш"},
+            {"sch", "щ"},
+            {"\"", "ъ"},
+            {"y", "ы"},
+            {"'", "ь"},
+            {"je", "э"},
+            {"yu", "ю"},
+            {"ya", "я"},
+            {"A", "А"},
+            {"B", "Б"},
+            {"V", "В"},
+            {"G", "Г"},
+            {"D", "Д"},
+            {"E", "Е"},
+            {"Yo", "Ё"},
+            {"Zh", "Ж"},
+            {"Z", "З"},
+            {"I", "И"},
+            {"J", "Й"},
+            {"K", "К"},
+            {"L", "Л"},
+            {"M", "М"},
+            {"N", "Н"},
+            {"O", "О"},
+            {"P", "П"},
+            {"R", "Р"},
+            {"S", "С"},
+            {"T", "Т"},
+            {"U", "У"},
+            {"F", "Ф"},
+            {"H", "Х"},
+            {"C", "Ц"},
+            {"Ch", "Ч"},
+            {"Sh", "Ш"},
+            {"Sch", "Щ"},
+            {"Y", "Ы"},
+            {"Je","Э"},
+            {"Yu", "Ю"},
+            {"Ya", "Я"}
         };
 
         private static readonly Dictionary<string, string> TransliterDictionaryKeyboardEnToRu = new Dictionary
@@ -234,6 +302,37 @@ namespace MovieSelector.Infrascturcture
         public static string TranslitRuToEn(string sourceText)
         {
             return Translate(sourceText, TransliterDictionaryRuToEn);
+        }
+
+        public static string TranslitEnToRu(string sourceText)
+        {
+            var ans = new StringBuilder();
+            var dictionary = TransliterDictionaryEnToRu;
+
+            for (var i = 0; i < sourceText.Length; i++)
+            {
+                for (var j = 2; j > -1; j--)
+                {
+                    if (sourceText.Length >= i + j + 1)
+                    {
+                        var key = sourceText.Substring(i, j + 1).ToLower();
+
+                        if (dictionary.ContainsKey(key))
+                        {
+                            ans.Append(dictionary[key]);
+                            i += j;
+                            break;
+                        }
+                    }
+
+                    if (j == 0)
+                    {
+                        ans.Append(sourceText[i].ToString());
+                    }
+                }
+            }
+
+            return ans.ToString();
         }
     }
 }

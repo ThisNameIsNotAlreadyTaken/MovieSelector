@@ -27,12 +27,32 @@ namespace Common.Instrastructure
 
         private static readonly string DateParam = $"&date={DateTime.Now.ToString("dd.MM.yyyy")}";
 
+        private static bool ParseKinopoiskIdFromQimdbResult(string data, ref string id)
+        {
+            var potentialIds = QimbdRegex.Matches(data);
+
+            if (potentialIds.Count <= 0) return false;
+
+            var idMatch = NumberRegex.Matches(potentialIds[0].Value);
+
+            if (idMatch.Count <= 0) return false;
+
+            id = idMatch[0].Value;
+
+            return true;
+        }
+
         private static async Task<string> GetKinopoiskIdFromQimbdByNameAsync(Movie movie, int attemptCount, int reconnectTime)
         {
             var attemptCnt = 0;
             var gotResult = false;
             string result = null;
-            var queryString = ResourceHelper.Resources.QimdbUrl + string.Format(QimbdParamString, movie.FileNameWithoutExtension);
+
+            var parameter = movie.FileNameWithoutExtension;
+            var translitParameter = Transliter.TranslitEnToRu(parameter);
+
+            var queryString = ResourceHelper.Resources.QimdbUrl + string.Format(QimbdParamString, parameter);
+            var translitQueryString = ResourceHelper.Resources.QimdbUrl + string.Format(QimbdParamString, translitParameter);
 
             using (var client = new HttpClient())
             {
@@ -40,20 +60,13 @@ namespace Common.Instrastructure
                 {
                     try
                     {
-                        var data = await
-                            client.GetStringAsync(queryString);
+                        var data = await client.GetStringAsync(queryString);
+                        gotResult = ParseKinopoiskIdFromQimdbResult(data, ref result);
 
-                        var potentialIds = QimbdRegex.Matches(data);
-
-                        if (potentialIds.Count > 0)
+                        if (!gotResult)
                         {
-                            var idMatch = NumberRegex.Matches(potentialIds[0].Value);
-
-                            if (idMatch.Count > 0)
-                            {
-                                result = idMatch[0].Value;
-                                gotResult = true;
-                            }
+                            data = await client.GetStringAsync(translitQueryString);
+                            gotResult = ParseKinopoiskIdFromQimdbResult(data, ref result);
                         }
                     }
                     catch (Exception)
@@ -68,15 +81,37 @@ namespace Common.Instrastructure
             return result;
         }
 
+        private static bool ParseKinopoiskIdFromResult(string data, ref string id)
+        {
+            if (data == null || data == "null") return false;
+
+            var potentialIds = KinopoiskIdByNameRegex.Matches(data);
+
+            if (potentialIds.Count <= 0) return false;
+
+            var idMatch = NumberRegex.Matches(potentialIds[0].Value);
+
+            if (idMatch.Count <= 0) return false;
+
+            id = idMatch[0].Value;
+
+            return true;
+        }
+
         private static async Task<string> GetKinopoiskIdFromUnOfficialApiBaseByNameAsync(Movie movie, int attemptCount, int reconnectTime)
         {
             var attemptCnt = 0;
             var gotResult = false;
             string result = null;
 
+            var parameter = movie.FileNameWithoutExtension.Replace(' ', '_');
+            var translitParameter = Transliter.TranslitEnToRu(parameter);
+
             var queryString = ResourceHelper.Resources.KinopoiskApiUrl +
-                              string.Format(KinopoiskSearchFilmByNameParamString,
-                                  movie.FileNameWithoutExtension.Replace(' ', '_'));
+                              string.Format(KinopoiskSearchFilmByNameParamString, parameter);
+
+            var translitQueryString = ResourceHelper.Resources.KinopoiskApiUrl +
+                                      string.Format(KinopoiskSearchFilmByNameParamString, translitParameter);
 
             using (var client = new HttpClient())
             {
@@ -84,25 +119,16 @@ namespace Common.Instrastructure
                 {
                     try
                     {
-                        var data = await
-                            client.GetStringAsync(queryString);
+                        var data = await client.GetStringAsync(queryString);
+                        gotResult = ParseKinopoiskIdFromResult(data, ref result);
 
-                        if (data != null && data != "null")
+                        if (!gotResult)
                         {
-                            var potentialIds = KinopoiskIdByNameRegex.Matches(data);
-
-                            if (potentialIds.Count > 0)
-                            {
-                                var idMatch = NumberRegex.Matches(potentialIds[0].Value);
-
-                                if (idMatch.Count > 0)
-                                {
-                                    result = idMatch[0].Value;
-                                    gotResult = true;
-                                }
-                            }
+                            data = await client.GetStringAsync(translitQueryString);
+                            gotResult = ParseKinopoiskIdFromResult(data, ref result);
                         }
-                        else
+
+                        if (!gotResult)
                         {
                             queryString += DateParam;
                         }
