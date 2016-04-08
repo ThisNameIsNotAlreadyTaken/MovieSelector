@@ -11,7 +11,7 @@
         xmlns:models="clr-namespace:Common.Models;assembly=Common"
         Icon="../Resources/icon.png"
         Title="Movie Selector"
-        Width="700" Height="400" WindowStartupLocation="CenterScreen">
+        Width="820" Height="465" WindowStartupLocation="CenterScreen">
     <shell:WindowChrome.WindowChrome>
         <shell:WindowChrome
             ResizeBorderThickness="6"
@@ -151,14 +151,15 @@
                         <Image Source="{Binding SelectedMovie.KinopoiskInfo.Poster}"></Image>
                     </Grid>
                     <DockPanel Grid.Column="1" Visibility="{Binding SelectedMovie, Converter={StaticResource NullVisibilityConverter}}">
-                        <Grid Margin="15,5,0,15">
+                        <Grid Margin="5,5,0,0">
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="50*"></RowDefinition>
-                                <RowDefinition Height="50*"></RowDefinition>
-                                <RowDefinition Height="50*"></RowDefinition>
-                                <RowDefinition Height="75*"></RowDefinition>
-                                <RowDefinition Height="75*"></RowDefinition>
-                                <RowDefinition Height="149*"></RowDefinition>
+                                <RowDefinition Height="40*"></RowDefinition>
+                                <RowDefinition Height="40*"></RowDefinition>
+                                <RowDefinition Height="40*"></RowDefinition>
+                                <RowDefinition Height="40*"></RowDefinition>
+                                <RowDefinition Height="40*"></RowDefinition>
+                                <RowDefinition Height="145*"></RowDefinition>
+                                <RowDefinition Height="90*"></RowDefinition>
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="114*"></ColumnDefinition>
@@ -186,16 +187,21 @@
                                            Converter={StaticResource NullToUnknownStringConverter}}" >
                                 <TextBlock Text="{Binding SelectedMovie.KinopoiskInfo.Actors, 
                                            Converter={StaticResource NullToUnknownStringConverter}}" 
-                                           TextWrapping="WrapWithOverflow"></TextBlock>
+                                           TextWrapping="WrapWithOverflow" TextTrimming="CharacterEllipsis"></TextBlock>
                             </Label>
                             <Label Grid.Column="0" Grid.Row="4" FontSize="18">Directors :</Label>
                             <Label Grid.Column="1" Grid.Row="4" Margin="0,5,0,0" ToolTip="{Binding SelectedMovie.KinopoiskInfo.Directors, 
                                            Converter={StaticResource NullToUnknownStringConverter}}">
                                 <TextBlock Text="{Binding SelectedMovie.KinopoiskInfo.Directors, 
                                            Converter={StaticResource NullToUnknownStringConverter}}" 
-                                           TextWrapping="WrapWithOverflow"></TextBlock>
+                                           TextWrapping="WrapWithOverflow" TextTrimming="CharacterEllipsis"></TextBlock>
                             </Label>
-                            <StackPanel Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="5" Visibility="{Binding SelectedMovie.KinopoiskInfo.Rating, Converter={StaticResource NullVisibilityConverter}}">
+                            <Label Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2">
+                                <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+                                    <TextBlock Text="{Binding SelectedMovie.KinopoiskInfo.Description}" TextWrapping="Wrap"></TextBlock>
+                                </ScrollViewer>
+                            </Label>
+                            <StackPanel Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="6" Visibility="{Binding SelectedMovie.KinopoiskInfo.Rating, Converter={StaticResource NullVisibilityConverter}}">
                                 <Grid>
                                     <Grid.RowDefinitions>
                                         <RowDefinition></RowDefinition>
@@ -237,13 +243,13 @@
                         <ColumnDefinition></ColumnDefinition>
                         <ColumnDefinition></ColumnDefinition>
                     </Grid.ColumnDefinitions>
-                    <WrapPanel Orientation="Horizontal" Margin="10,0,0,0">
+                    <WrapPanel Orientation="Horizontal" Margin="10,0,0,0" VerticalAlignment="Center">
                         <TextBlock> Was Rolled <Bold><TextBlock FontSize="15" Text="{Binding Counter}" /></Bold> times</TextBlock>
                         <Button Name="ResetCount" Style="{StaticResource WindowColoredButtonStyle}" FontFamily="Segoe UI Symbol" 
                       FontSize="25" Content="&#xE248;" Command="{Binding ResetCounterCommand}" Margin="10,-12,0,0"
                       ToolTip="Reset Count" VerticalAlignment="Top"/>
                     </WrapPanel>
-                    <StackPanel Grid.Column="1" HorizontalAlignment="Right" Orientation="Horizontal" Margin="0,-25,0,0">
+                    <StackPanel Grid.Column="1" HorizontalAlignment="Right" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,-25,0,0">
                         <Button Name="SelectMovie" Style="{StaticResource WindowColoredButtonStyle}" FontFamily="Segoe UI Symbol" 
                       FontSize="33" Content="&#xE19E;" Command="{Binding SelectMovieCommand}" Margin="0,5,10,0"
                       Visibility="{Binding Directories, Converter={StaticResource ListCountVisibilityConverter}}"   

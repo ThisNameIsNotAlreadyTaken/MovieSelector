@@ -67,8 +67,12 @@
                     <ColumnDefinition Width="117*"></ColumnDefinition>
                     <ColumnDefinition Width="44*"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0" FontSize="30" TextTrimming="CharacterEllipsis" FontFamily="Verdana"
+                <Label Grid.Column="0">
+                    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                        <TextBlock TextTrimming="CharacterEllipsis" FontFamily="Verdana"
                            x:Name="ResponseTextBox" ToolTip="Message" Text="{Binding Message}"/>
+                    </ScrollViewer>
+                </Label>
                 <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" Width="80">
                     <Button Content="OK" Click="OKButton_Click" Margin="0,0,10,0" Width="70" HorizontalAlignment="Right"/>
                 </StackPanel>
