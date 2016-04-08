@@ -132,7 +132,10 @@ namespace MovieSelector.ViewModels
             {
                 Process.Start(SelectedMovie.FullPath);
             }
-            new ErrorWindow(new FileNotFoundException("File not found")).ShowDialog();
+            else
+            {
+                new ErrorWindow(new FileNotFoundException("File not found")).ShowDialog();
+            }
         }
 
         public ICommand PlayMovieCommand => new DelegateCommand(PlayMovie);
@@ -201,7 +204,14 @@ namespace MovieSelector.ViewModels
                 ResourceHelper.Resources.LocalFile = LocalInfoFileName;
             }
 
-            ResourceHelper.SavePreferences();
+            try
+            {
+                ResourceHelper.SavePreferences();
+            }
+            catch (Exception e)
+            {
+                new ErrorWindow(e).ShowDialog();
+            }
         }
 
         private int? _searchBoxWidth;
