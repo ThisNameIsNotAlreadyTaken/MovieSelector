@@ -32,6 +32,9 @@ namespace Common.Models
         [JsonProperty("creators")]
         public List<List<Participant>> Participants { get; set; }
 
+        [JsonProperty("description")]
+        public string Description { get; set; }
+
         public byte[] Poster { get; set; }
 
         public class RatingInfo

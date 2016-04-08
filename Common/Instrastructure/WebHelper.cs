@@ -25,7 +25,7 @@ namespace Common.Instrastructure
 
         private const string KinopoiskSearchFilmByIdParamString = "/getFilm?filmID={0}";
 
-        private static readonly string DateParam = string.Format("&date={0}", DateTime.Now.ToString("dd.MM.yyyy"));
+        private static readonly string DateParam = $"&date={DateTime.Now.ToString("dd.MM.yyyy")}";
 
         private static async Task<string> GetKinopoiskIdFromQimbdByNameAsync(Movie movie, int attemptCount, int reconnectTime)
         {

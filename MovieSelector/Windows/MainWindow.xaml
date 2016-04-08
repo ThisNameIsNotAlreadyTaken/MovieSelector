@@ -153,11 +153,11 @@
                     <DockPanel Grid.Column="1" Visibility="{Binding SelectedMovie, Converter={StaticResource NullVisibilityConverter}}">
                         <Grid Margin="15,5,0,15">
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="60*"></RowDefinition>
-                                <RowDefinition Height="60*"></RowDefinition>
-                                <RowDefinition Height="60*"></RowDefinition>
-                                <RowDefinition Height="60*"></RowDefinition>
-                                <RowDefinition Height="60*"></RowDefinition>
+                                <RowDefinition Height="50*"></RowDefinition>
+                                <RowDefinition Height="50*"></RowDefinition>
+                                <RowDefinition Height="50*"></RowDefinition>
+                                <RowDefinition Height="75*"></RowDefinition>
+                                <RowDefinition Height="75*"></RowDefinition>
                                 <RowDefinition Height="149*"></RowDefinition>
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
@@ -165,24 +165,35 @@
                                 <ColumnDefinition Width="311*"></ColumnDefinition>
                             </Grid.ColumnDefinitions>
                             <Label FontSize="18">File name :</Label>
-                            <Label Grid.Column="1" Grid.Row="0" Margin="0,5,0,0">
-                                <TextBlock Text="{Binding SelectedMovie.FileName}" TextWrapping="WrapWithOverflow"></TextBlock>
+                            <Label Grid.Column="1" Grid.Row="0" Margin="0,5,0,0" ToolTip="{Binding SelectedMovie.FileName}">
+                                <TextBlock Text="{Binding SelectedMovie.FileName}" 
+                                           TextWrapping="WrapWithOverflow" TextTrimming="CharacterEllipsis"></TextBlock>
                             </Label>
                             <Label Grid.Column="0" Grid.Row="1" FontSize="18">Movie name:</Label>
                             <Label Grid.Column="1" Grid.Row="1" Margin="0,5,0,0">
-                                <TextBlock Text="{Binding SelectedMovie.KinopoiskInfo.Name, Converter={StaticResource NullToUnknownStringConverter}}" TextWrapping="WrapWithOverflow"></TextBlock>
+                                <TextBlock Text="{Binding SelectedMovie.KinopoiskInfo.Name, 
+                                           Converter={StaticResource NullToUnknownStringConverter}}" 
+                                           TextWrapping="WrapWithOverflow" TextTrimming="CharacterEllipsis"></TextBlock>
                             </Label>
                             <Label Grid.Column="0" Grid.Row="2" FontSize="18">Year :</Label>
                             <Label Grid.Column="1" Grid.Row="2" Margin="0,5,0,0">
-                                <TextBlock Text="{Binding SelectedMovie.KinopoiskInfo.Year, Converter={StaticResource NullToUnknownStringConverter}}" TextWrapping="WrapWithOverflow"></TextBlock>
+                                <TextBlock Text="{Binding SelectedMovie.KinopoiskInfo.Year, 
+                                           Converter={StaticResource NullToUnknownStringConverter}}" 
+                                           TextWrapping="WrapWithOverflow"></TextBlock>
                             </Label>
                             <Label Grid.Column="0" Grid.Row="3" FontSize="18">Starring :</Label>
-                            <Label Grid.Column="1" Grid.Row="3" Margin="0,5,0,0">
-                                <TextBlock Text="{Binding SelectedMovie.KinopoiskInfo.Actors, Converter={StaticResource NullToUnknownStringConverter}}" TextWrapping="WrapWithOverflow"></TextBlock>
+                            <Label Grid.Column="1" Grid.Row="3" Margin="0,5,0,0" ToolTip="{Binding SelectedMovie.KinopoiskInfo.Actors, 
+                                           Converter={StaticResource NullToUnknownStringConverter}}" >
+                                <TextBlock Text="{Binding SelectedMovie.KinopoiskInfo.Actors, 
+                                           Converter={StaticResource NullToUnknownStringConverter}}" 
+                                           TextWrapping="WrapWithOverflow"></TextBlock>
                             </Label>
                             <Label Grid.Column="0" Grid.Row="4" FontSize="18">Directors :</Label>
-                            <Label Grid.Column="1" Grid.Row="4" Margin="0,5,0,0">
-                                <TextBlock Text="{Binding SelectedMovie.KinopoiskInfo.Directors, Converter={StaticResource NullToUnknownStringConverter}}" TextWrapping="WrapWithOverflow"></TextBlock>
+                            <Label Grid.Column="1" Grid.Row="4" Margin="0,5,0,0" ToolTip="{Binding SelectedMovie.KinopoiskInfo.Directors, 
+                                           Converter={StaticResource NullToUnknownStringConverter}}">
+                                <TextBlock Text="{Binding SelectedMovie.KinopoiskInfo.Directors, 
+                                           Converter={StaticResource NullToUnknownStringConverter}}" 
+                                           TextWrapping="WrapWithOverflow"></TextBlock>
                             </Label>
                             <StackPanel Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="5" Visibility="{Binding SelectedMovie.KinopoiskInfo.Rating, Converter={StaticResource NullVisibilityConverter}}">
                                 <Grid>
