@@ -1,10 +1,11 @@
-﻿<Window x:Class="MovieSelector.Windows.DirectoryWindow"
+﻿<layout:WindowBase x:Class="MovieSelector.Windows.DirectoryWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:shell="http://schemas.microsoft.com/winfx/2006/xaml/presentation/shell"
-        xmlns:converters="clr-namespace:Common.Instrastructure.Converters;assembly=Common"
+        xmlns:vm="clr-namespace:MovieSelector.ViewModels"
+        xmlns:layout="clr-namespace:MovieSelector.Layout"
         mc:Ignorable="d"
         Title="Pick directories" Height="300" Width="500" WindowStartupLocation="CenterOwner">
     <shell:WindowChrome.WindowChrome>
@@ -15,10 +16,9 @@
             GlassFrameThickness="0">
         </shell:WindowChrome>
     </shell:WindowChrome.WindowChrome>
-    <Window.Resources>
-        <converters:NullCollapsedVisibilityConverter x:Key="NullCollapsedVisibilityConverter" />
-        <converters:AntiNullCollapsedVisibilityConverter x:Key="AntiNullCollapsedVisibilityConverter" />
-    </Window.Resources>
+    <Window.DataContext>
+        <vm:MovieSelectorViewModel></vm:MovieSelectorViewModel>
+    </Window.DataContext>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -27,12 +27,11 @@
             <RowDefinition Height="auto" />
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <Border Grid.RowSpan="2" BorderThickness="1" BorderBrush="Silver">
+        <Border Grid.RowSpan="2" BorderThickness="1" BorderBrush="{DynamicResource SilverBrush}">
             <Border.Background>
-                <LinearGradientBrush StartPoint="0.5,0"
-				   EndPoint="0.5,1">
-                    <GradientStop Color="White" Offset="0" />
-                    <GradientStop Color="Snow" Offset="1" />
+                <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                    <GradientStop Color="{DynamicResource WhiteColor}" Offset="0" />
+                    <GradientStop Color="{DynamicResource SnowColor}" Offset="1" />
                 </LinearGradientBrush>
             </Border.Background>
         </Border>
@@ -51,26 +50,32 @@
                     <Border Grid.ColumnSpan="2">
                         <Border.Background>
                             <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
-                                <GradientStop Color="#800080" Offset="0" />
-                                <GradientStop Color="#800080" Offset="1" />
+                                <GradientStop Color="{DynamicResource AccentColor}" Offset="0" />
+                                <GradientStop Color="{DynamicResource AccentColor}" Offset="1" />
                             </LinearGradientBrush>
                         </Border.Background>
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="99*"></ColumnDefinition>
-                                <ColumnDefinition Width="65*"></ColumnDefinition>
+                                <ColumnDefinition Width="99*"/>
+                                <ColumnDefinition Width="65*"/>
                             </Grid.ColumnDefinitions>
                             <StackPanel Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Left" Margin="10,0,0,0">
-                                <Label Foreground="Snow" HorizontalAlignment="Left" FontSize="30" 
-                                       FontStretch="UltraExpanded" Margin="10,0,0,0">Settings</Label>
+                                <Label Foreground="{DynamicResource SnowBrush}" HorizontalAlignment="Left" FontSize="30" 
+                                       FontStretch="UltraExpanded" Margin="10,0,0,0" Content="Settings" FontWeight="SemiBold"/>
                             </StackPanel>
-                            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Right" Height="30">
-                                <Button Name="MinimizeButton" Style="{StaticResource WindowButtonStyle}" Content="0"
-                             shell:WindowChrome.IsHitTestVisibleInChrome="True" Click="MinimizeClick" />
-                                <Button Name="RestoreButton" Style="{StaticResource WindowButtonStyle}" Content="1" 
-                             shell:WindowChrome.IsHitTestVisibleInChrome="True" Click="RestoreClick" />
-                                <Button Name="CloseButton" Style="{StaticResource WindowButtonStyle}" Content="r" 
-                             shell:WindowChrome.IsHitTestVisibleInChrome="True" Click="CloseClick"/>
+                            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Right" 
+                                        Height="30">
+                                <Button Style="{StaticResource MinimizeButtonStyle}" VerticalAlignment="Bottom"
+                                        SnapsToDevicePixels="True" shell:WindowChrome.IsHitTestVisibleInChrome="True" 
+                                        Click="MinimizeClick" ToolTip="Minimize" Foreground="{DynamicResource WhiteBrush}"/>
+                                <ToggleButton x:Name="MaximizeButton" Style="{StaticResource MaximizeButtonStyle}"
+                                              VerticalAlignment="Bottom" SnapsToDevicePixels="True"
+                                              shell:WindowChrome.IsHitTestVisibleInChrome="True"
+                                              Click="RestoreClick" ToolTip="Maximize" Foreground="{DynamicResource WhiteBrush}" 
+                                              Margin="0,0,0,3" />
+                                <Button Style="{StaticResource CloseButtonStyle}" SnapsToDevicePixels="True" 
+                                        shell:WindowChrome.IsHitTestVisibleInChrome="True" 
+                                        Click="CloseClick" ToolTip="Close" Foreground="{DynamicResource WhiteBrush}"/>
                             </StackPanel>
                         </Grid>
                     </Border>
@@ -80,36 +85,38 @@
 
         <Grid Grid.Row="1">
             <Grid.RowDefinitions>
-                <RowDefinition Height="178*"></RowDefinition>
-                <RowDefinition Height="41*"></RowDefinition>
+                <RowDefinition Height="178*"/>
+                <RowDefinition Height="41*"/>
             </Grid.RowDefinitions>
-            <ListBox Name="LbDirectories" ItemsSource="{Binding Directories}"></ListBox>
+            <ListBox Name="LbDirectories" ItemsSource="{Binding Directories}"/>
             <Grid Grid.Row="1">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition></ColumnDefinition>
-                    <ColumnDefinition Width="3*"></ColumnDefinition>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="3*"/>
                 </Grid.ColumnDefinitions>
                 <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" Margin="10,0,0,0">
-                    <Button Name="AddDirectory" Style="{StaticResource WindowColoredButtonStyle}" FontFamily="Segoe UI Symbol" 
-                      FontSize="30" Content="&#x2795;" Click="AddDirectory_OnClick" Margin="0,0,10,0"  
-                      ToolTip="Add directory" VerticalAlignment="Top"/>
-                    <Button Name="RemoveDirectory" Style="{StaticResource WindowColoredButtonStyle}" FontFamily="Segoe UI Symbol" 
-                      FontSize="30" Content="&#x2796;" Click="RemoveDirectory_OnClick" Margin="0,0,10,0"  
-                      ToolTip="Remove directory" VerticalAlignment="Top"/>
+                    <Button Name="AddDirectory" Style="{StaticResource WindowColoredButtonStyle}"
+                            FontSize="30" Content="&#x2795;" Click="AddDirectoryClick" Margin="0,0,10,0"  
+                            ToolTip="Add directory" VerticalAlignment="Top"/>
+                    <Button Name="RemoveDirectory" Style="{StaticResource WindowColoredButtonStyle}"  
+                            FontSize="30" Content="&#x2796;" Click="RemoveDirectoryClick" Margin="0,0,10,0"  
+                            ToolTip="Remove directory" VerticalAlignment="Top"/>
                 </StackPanel>
                 <StackPanel Grid.Column="1" DockPanel.Dock="Right" Orientation="Horizontal" HorizontalAlignment="Right">
-                    <Label VerticalAlignment="Top" FontSize="20" Margin="0,5,0,0">Local info file:</Label>
-                    <Label FontFamily="Segoe UI Symbol" Foreground="MediumSeaGreen"  VerticalAlignment="Top" FontSize="25" 
-                       Content="&#x2714;" Visibility="{Binding LocalInfoFileName, Converter={StaticResource NullCollapsedVisibilityConverter}}" 
-                       ToolTip="{Binding LocalInfoFileName}"/>
-                    <Label FontFamily="Segoe UI Symbol" Foreground="Crimson"  VerticalAlignment="Top" FontSize="25" 
-                       Content="&#x2718;" Visibility="{Binding LocalInfoFileName, Converter={StaticResource AntiNullCollapsedVisibilityConverter}}" 
-                       ToolTip="No file used"/>
-                    <Button Name="BrowseFile" Style="{StaticResource WindowColoredButtonStyle}" FontFamily="Segoe UI Symbol" 
-                      FontSize="30" Content="&#x270E;" Click="BrowseFile_OnClick" Margin="0,0,10,0"  
-                      ToolTip="Select local info file" VerticalAlignment="Top"/>
+                    <Label VerticalAlignment="Top" FontSize="20" Margin="0,5,0,0" Content="Local info file:"/>
+                    <Label FontFamily="Segoe UI Symbol" Foreground="{DynamicResource GreenBrush}"  VerticalAlignment="Top" FontSize="25" 
+                           Content="&#x2714;" 
+                           Visibility="{Binding LocalInfoFileName, Converter={StaticResource NullCollapsedVisibilityConverter}}" 
+                           ToolTip="{Binding LocalInfoFileName}"/>
+                    <Label FontFamily="Segoe UI Symbol" Foreground="{DynamicResource RedBrush}"  VerticalAlignment="Top" FontSize="25" 
+                           Content="&#x2718;" 
+                           Visibility="{Binding LocalInfoFileName, Converter={StaticResource AntiNullCollapsedVisibilityConverter}}" 
+                           ToolTip="No file used"/>
+                    <Button Name="BrowseFile" Style="{StaticResource WindowColoredButtonStyle}"
+                            FontSize="30" Content="&#x270E;" Click="BrowseFileClick" Margin="0,0,10,0"  
+                            ToolTip="Select local info file" VerticalAlignment="Top"/>
                 </StackPanel>
             </Grid>
         </Grid>
     </Grid>
-</Window>
+</layout:WindowBase>

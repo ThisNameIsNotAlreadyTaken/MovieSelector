@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Text;
 
-namespace Common.Instrastructure
+namespace Common.Instrastructure.Helpers
 {
     public static class Transliter
     {

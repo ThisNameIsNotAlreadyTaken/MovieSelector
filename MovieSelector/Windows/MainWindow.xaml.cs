@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.ComponentModel;
+using System.Windows;
 using MovieSelector.ViewModels;
 
 namespace MovieSelector.Windows
@@ -9,11 +10,18 @@ namespace MovieSelector.Windows
     public partial class MainWindow
     {
         private readonly DirectoryWindow _dWindow;
+        private MovieSelectorViewModel ViewModel { get; } 
 
         public MainWindow()
         {
             InitializeComponent();
+
+            ViewModel = new MovieSelectorViewModel();
+            DataContext = ViewModel;
+
             _dWindow = new DirectoryWindow();
+
+            Closing += OnClosing;
         }
 
         private void DirectoryDialogShowClick(object sender, RoutedEventArgs e)
@@ -25,21 +33,10 @@ namespace MovieSelector.Windows
             _dWindow.Show();
         }
 
-        protected void MinimizeClick(object sender, RoutedEventArgs e)
+        public void OnClosing(object sender, CancelEventArgs e)
         {
-            WindowState = WindowState.Minimized;
-        }
-
-        protected void RestoreClick(object sender, RoutedEventArgs e)
-        {
-            WindowState = (WindowState == WindowState.Normal) ? WindowState.Maximized : WindowState.Normal;
-        }
-
-        protected void CloseClick(object sender, RoutedEventArgs e)
-        {
-            ((MovieSelectorViewModel)DataContext).SavePreferences();
+            ViewModel.SavePreferences();
             _dWindow.Close();
-            Close();
         }
     }
 }

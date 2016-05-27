@@ -1,5 +1,4 @@
 ﻿using System.Windows;
-using MovieInfoParser.ViewModels;
 
 namespace MovieInfoParser
 {
@@ -10,7 +9,7 @@ namespace MovieInfoParser
     {
         private void Application_StartUp(object sender, StartupEventArgs e)
         {
-            new MainWindow { DataContext = new MovieInfoParserViewModel() }.Show();
+            new MainWindow().Show();
         }
     }
 }

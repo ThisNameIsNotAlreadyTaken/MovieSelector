@@ -7,18 +7,20 @@ using System.IO;
 using System.Linq;
 using System.Windows.Input;
 using Common.Instrastructure;
+using Common.Instrastructure.Helpers;
 using Common.Models;
-using MovieSelector.Infrascturcture;
 using MovieSelector.Windows;
 using Newtonsoft.Json;
 using WpfControls;
+using WpfExceptionViewer;
 
 namespace MovieSelector.ViewModels
 {
     public class MovieSelectorViewModel : ObservableObject
     {
-        private List<Movie> _movieList = new List<Movie>();
+        #region Properties
 
+        private List<Movie> _movieList = new List<Movie>();
         private readonly Random _rnd = new Random();
 
         private List<KinopoiskInfo> LocalInfoList { get; set; }
@@ -26,23 +28,6 @@ namespace MovieSelector.ViewModels
         public string LocalInfoFileName { get; set; }
 
         private int _counter;
-
-        private Movie _selectedMovie;
-
-        public ObservableCollection<string> Directories { get; set;}
-
-        public bool Processing { get; set; }
-
-        public Movie SelectedMovie
-        {
-            get { return _selectedMovie; }
-            set
-            {
-                _selectedMovie = value;
-                NotifyPropertyChanged("SelectedMovie");
-            }
-        }
-
         public int Counter
         {
             get { return _counter; }
@@ -53,30 +38,51 @@ namespace MovieSelector.ViewModels
             }
         }
 
-        public MovieSelectorViewModel()
+        private Movie _selectedMovie;
+        public Movie SelectedMovie
         {
-            Directories = new ObservableCollection<string>();
-            Directories.CollectionChanged += OnDirectoriesCollectionChanged;
-
-            var storedDirectories = ResourceHelper.Resources.Directories;
-
-            storedDirectories?.ForEach(x =>
+            get { return _selectedMovie; }
+            set
             {
-                if (Directory.Exists(x)) Directories.Add(x);
-            });
-
-            var storedInfoFile = ResourceHelper.Resources.LocalFile;
-
-            if (!string.IsNullOrEmpty(storedInfoFile) && File.Exists(storedInfoFile))
-            {
-                AddInfoFile(storedInfoFile);
+                _selectedMovie = value;
+                NotifyPropertyChanged("SelectedMovie");
             }
         }
-        
-        private void OnDirectoriesCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+
+        public ObservableCollection<string> Directories { get; set; }
+
+        public bool Processing { get; set; }
+
+        private int? _searchBoxWidth;
+        public int? SearchBoxWidth
         {
-            _movieList = MovieDirectoryHelper.GetMoviesFromFolders(Directories);
+            get { return _searchBoxWidth; }
+            set
+            {
+                _searchBoxWidth = value;
+                NotifyPropertyChanged("SearchBoxWidth");
+            }
         }
+
+        private Movie _searchBoxResult;
+        public Movie SearchBoxResult
+        {
+            get { return _searchBoxResult; }
+            set
+            {
+                _searchBoxResult = value;
+                NotifyPropertyChanged("SearchBoxResult");
+
+                if (value != null)
+                {
+                    SelectMovie(value);
+                }
+            }
+        }
+
+        #endregion
+
+        #region Methods
 
         private async void SelectMovie(Movie movie)
         {
@@ -87,58 +93,69 @@ namespace MovieSelector.ViewModels
 
             var selectedMovie = movie ?? _movieList[_rnd.Next(_movieList.Count)];
 
-            if (selectedMovie.KinopoiskInfo?.Id == null)
-            {
-                if (WebHelper.IsInternetConnectionAvailable)
+            try
+            { 
+                if (selectedMovie.KinopoiskInfo?.Id == null)
                 {
-                    selectedMovie.KinopoiskInfo = await WebHelper.GetMovieInfo(selectedMovie, 1, 1);
-                }
+                    if (WebHelper.IsInternetConnectionAvailable)
+                    {
+                        selectedMovie.KinopoiskInfo = await WebHelper.GetMovieInfo(selectedMovie, 1, 1);
+                    }
 
-                if (selectedMovie.KinopoiskInfo?.Id == null && LocalInfoList != null)
-                {
-                    selectedMovie.KinopoiskInfo =
-                        LocalInfoList.FirstOrDefault(x => x.RelatedFileName == selectedMovie.FileNameWithoutExtension);
-                }
+                    if (selectedMovie.KinopoiskInfo?.Id == null && LocalInfoList != null)
+                    {
+                        selectedMovie.KinopoiskInfo =
+                            LocalInfoList.FirstOrDefault(
+                                x => x.RelatedFileName == selectedMovie.FileNameWithoutExtension);
+                    }
 
-                if (selectedMovie.KinopoiskInfo == null)
-                {
-                    selectedMovie.KinopoiskInfo = new KinopoiskInfo();
+                    if (selectedMovie.KinopoiskInfo == null)
+                    {
+                        selectedMovie.KinopoiskInfo = new KinopoiskInfo();
+                    }
                 }
             }
-
-            SelectedMovie = selectedMovie;
-
-            if (movie == null)
+            catch (Exception e)
             {
-                Counter++;
+                new ExceptionViewer("An unexpected error occurred in the application.", e).ShowDialog();
             }
+            finally
+            {
+                SelectedMovie = selectedMovie;
 
-            Processing = false;
-            NotifyPropertyChanged("Processing");
+                if (movie == null)
+                {
+                    Counter++;
+                }
+
+                Processing = false;
+                NotifyPropertyChanged("Processing");
+            }      
         }
-
-        public ICommand SelectMovieCommand => new DelegateParameterCommand<Movie>(SelectMovie);
 
         private void ResetCounter()
         {
             Counter = 0;
         }
 
-        public ICommand ResetCounterCommand => new DelegateCommand(ResetCounter);
-
         private void PlayMovie()
         {
             if (File.Exists(SelectedMovie.FullPath))
             {
-                Process.Start(SelectedMovie.FullPath);
+                try
+                {
+                    Process.Start(SelectedMovie.FullPath);
+                }
+                catch (Exception e)
+                {
+                    new ExceptionViewer("An unexpected error occurred in the application.", e).ShowDialog();
+                }
             }
             else
             {
                 new ErrorWindow(new FileNotFoundException("File not found")).ShowDialog();
             }
         }
-
-        public ICommand PlayMovieCommand => new DelegateCommand(PlayMovie);
 
         public void AddDirectory(string item)
         {
@@ -181,9 +198,9 @@ namespace MovieSelector.ViewModels
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                // ignored
+                new ExceptionViewer("An unexpected error occurred in the application.", e).ShowDialog();
             }
             finally
             {
@@ -210,44 +227,58 @@ namespace MovieSelector.ViewModels
             }
             catch (Exception e)
             {
-                new ErrorWindow(e).ShowDialog();
+                new ExceptionViewer("An unexpected error occurred in the application.", e).ShowDialog();
             }
         }
 
-        private int? _searchBoxWidth;
-        public int? SearchBoxWidth
+        #endregion
+
+        #region Commands
+
+        public ICommand SelectMovieCommand => new DelegateParametrizedCommand<Movie>(SelectMovie);
+
+        public ICommand ResetCounterCommand => new DelegateCommand(ResetCounter);
+
+        public ICommand PlayMovieCommand => new DelegateCommand(PlayMovie);
+
+        #endregion
+
+        #region Events
+
+        private void OnDirectoriesCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            get { return _searchBoxWidth; }
-            set
-            {
-                _searchBoxWidth = value;
-                NotifyPropertyChanged("SearchBoxWidth");
-            }
+            _movieList = MovieDirectoryHelper.GetMoviesFromFolders(Directories);
         }
 
-        private Movie _searchBoxResult;
-        public Movie SearchBoxResult
+        #endregion
+
+        public MovieSelectorViewModel()
         {
-            get { return _searchBoxResult; }
-            set
+            Directories = new ObservableCollection<string>();
+            Directories.CollectionChanged += OnDirectoriesCollectionChanged;
+
+            var storedDirectories = ResourceHelper.Resources.Directories;
+
+            storedDirectories?.ForEach(x =>
             {
-                _searchBoxResult = value;
-                NotifyPropertyChanged("SearchBoxResult");
+                if (Directory.Exists(x)) Directories.Add(x);
+            });
 
-                if (value != null)
-                {
-                    SelectMovie(value);
-                }
+            var storedInfoFile = ResourceHelper.Resources.LocalFile;
+
+            if (!string.IsNullOrEmpty(storedInfoFile) && File.Exists(storedInfoFile))
+            {
+                AddInfoFile(storedInfoFile);
             }
-        }
+        } 
 
-        public SuggestionProvider SProvider
+        public SuggestionProvider SearchProvider
         {
             get
             {
                 return new SuggestionProvider(filter =>
                 {
-                    var valuesToTake = 15;
+                    const int valuesToTake = 15;
 
                     if (filter == null) return null;
 

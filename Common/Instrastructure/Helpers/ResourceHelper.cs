@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json;
 
-namespace Common.Instrastructure
+namespace Common.Instrastructure.Helpers
 {
     public class Resource
     {

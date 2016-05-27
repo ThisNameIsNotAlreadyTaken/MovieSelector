@@ -1,20 +1,21 @@
 ﻿using System;
 using System.Windows.Input;
 
-namespace MovieSelector.Infrascturcture
+namespace Common.Instrastructure
 {
-    public class DelegateParameterCommand<T> : ICommand where T: class 
+    public class DelegateParametrizedCommand<T> : ICommand where T : class
     {
         private readonly Action<T> _action;
 
-        public DelegateParameterCommand(Action<T> action)
+        public DelegateParametrizedCommand(Action<T> action)
         {
             _action = action;
         }
 
         public void Execute(object parameter)
         {
-            _action(parameter as T);
+            T toNesessaryType = parameter as T;
+            _action(toNesessaryType);
         }
 
         public bool CanExecute(object parameter)

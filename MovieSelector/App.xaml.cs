@@ -1,5 +1,4 @@
 ﻿using System.Windows;
-using MovieSelector.ViewModels;
 using MovieSelector.Windows;
 
 namespace MovieSelector
@@ -11,7 +10,7 @@ namespace MovieSelector
     {
         private void Application_StartUp(object sender, StartupEventArgs e)
         {
-           new MainWindow {DataContext = new MovieSelectorViewModel()}.Show();
+           new MainWindow().Show();
         }
     }
 }

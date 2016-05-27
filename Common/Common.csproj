@@ -74,7 +74,8 @@
     <Compile Include="Instrastructure\Converters\BoolToVisibilityConverter.cs" />
     <Compile Include="Instrastructure\Converters\DoubleToPercentRatingConverter.cs" />
     <Compile Include="Instrastructure\Converters\NullToUnknownStringConverter.cs" />
-    <Compile Include="Instrastructure\ResourceHelper.cs" />
+    <Compile Include="Instrastructure\DelegateParametrizedCommand.cs" />
+    <Compile Include="Instrastructure\Helpers\ResourceHelper.cs" />
     <Compile Include="Instrastructure\Converters\AntiListCountVisibilityConverter.cs" />
     <Compile Include="Instrastructure\Converters\AntiNullCollapsedVisibilityConverter.cs" />
     <Compile Include="Instrastructure\Converters\AntiNullVisibilityConverter.cs" />
@@ -82,11 +83,11 @@
     <Compile Include="Instrastructure\Converters\NullCollapsedVisibilityConverter.cs" />
     <Compile Include="Instrastructure\Converters\NullVisibilityConverter.cs" />
     <Compile Include="Instrastructure\DelegateCommand.cs" />
-    <Compile Include="Instrastructure\MovieDirectoryHelper.cs" />
+    <Compile Include="Instrastructure\Helpers\MovieDirectoryHelper.cs" />
     <Compile Include="Instrastructure\ObservableObject.cs" />
     <Compile Include="Instrastructure\Profession.cs" />
-    <Compile Include="Instrastructure\Transliter.cs" />
-    <Compile Include="Instrastructure\WebHelper.cs" />
+    <Compile Include="Instrastructure\Helpers\Transliter.cs" />
+    <Compile Include="Instrastructure\Helpers\WebHelper.cs" />
     <Compile Include="Models\KinopoiskInfo.cs" />
     <Compile Include="Models\Movie.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -94,6 +95,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

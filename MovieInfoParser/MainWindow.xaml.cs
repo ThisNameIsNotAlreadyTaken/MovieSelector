@@ -10,13 +10,18 @@ namespace MovieInfoParser
     /// </summary>
     public partial class MainWindow
     {
+        private MovieInfoParserViewModel ViewModel { get; }
+
         public MainWindow()
         {
             InitializeComponent();
+
+            ViewModel = new MovieInfoParserViewModel();
+            DataContext = ViewModel;
         }
 
 
-        private void AddDirectory_OnClick(object sender, RoutedEventArgs e)
+        private void AddDirectoryClick(object sender, RoutedEventArgs e)
         {
             var vm = (OpenDialogViewModel)new OpenDialogView().DataContext;
 
@@ -25,20 +30,20 @@ namespace MovieInfoParser
 
             if (vm.Show() != true) return;
 
-            ((MovieInfoParserViewModel)DataContext).AddDirectory(vm.SelectedFolder.Path);
+            ViewModel.AddDirectory(vm.SelectedFolder.Path);
         }
 
-        private void RemoveDirectory_OnClick(object sender, RoutedEventArgs e)
+        private void RemoveDirectoryClick(object sender, RoutedEventArgs e)
         {
             if (LbDirectories.SelectedItem != null)
             {
-                ((MovieInfoParserViewModel)DataContext).RemoveDirectory(LbDirectories.SelectedItem as string);
+                ViewModel.RemoveDirectory(LbDirectories.SelectedItem as string);
             }
         }
 
         protected override void OnClosing(CancelEventArgs e)
         {
-            ((MovieInfoParserViewModel)DataContext).SavePreferences();
+            ViewModel.SavePreferences();
         }
     }
 }

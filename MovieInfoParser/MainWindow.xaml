@@ -3,46 +3,47 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:MovieInfoParser.ViewModels"
         mc:Ignorable="d"
-        Title="MovieInfoGrabber" Height="450" Width="750" Icon="Resources/icon.png">
+        Title="MovieInfoParser" Height="450" Width="750" Icon="icon.ico">
+    <Window.DataContext>
+        <vm:MovieInfoParserViewModel></vm:MovieInfoParserViewModel>
+    </Window.DataContext>
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="129*"></ColumnDefinition>
-            <ColumnDefinition Width="167*"></ColumnDefinition>
+            <ColumnDefinition Width="129*"/>
+            <ColumnDefinition Width="167*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="280*"></RowDefinition>
-            <RowDefinition Height="39*"></RowDefinition>
+            <RowDefinition Height="280*"/>
+            <RowDefinition Height="39*"/>
         </Grid.RowDefinitions>
-        <ListBox Name="LbDirectories" ItemsSource="{Binding Directories}" Margin="10,10,0,0"></ListBox>
+        <ListBox Name="LbDirectories" ItemsSource="{Binding Directories}" Margin="10,10,0,0"/>
         <StackPanel Grid.Column="0" Grid.Row="1" Orientation="Horizontal" VerticalAlignment="Center">
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition></RowDefinition>
-                    <RowDefinition></RowDefinition>
+                    <RowDefinition/>
+                    <RowDefinition/>
                 </Grid.RowDefinitions>
                 <StackPanel Orientation="Horizontal">
-                    <Button Name="AddDirectory" Click="AddDirectory_OnClick" Margin="10,0,10,0" IsEnabled="{Binding NotProcessing}" Width="63">Add</Button>
-                    <Button Name="RemoveDirectory" Click="RemoveDirectory_OnClick" Margin="0,0,10,0" IsEnabled="{Binding NotProcessing}" Width="81">Remove</Button>
+                    <Button Name="AddDirectory" Click="AddDirectoryClick" Margin="10,0,10,0" IsEnabled="{Binding NotProcessing}" Width="63">Add</Button>
+                    <Button Name="RemoveDirectory" Click="RemoveDirectoryClick" Margin="0,0,10,0" IsEnabled="{Binding NotProcessing}" Width="81">Remove</Button>
                     <Button Name="ScanForInfo" Command="{Binding ScanForInfoCommand}" IsEnabled="{Binding NotProcessing}" Width="73">Scan</Button>
                 </StackPanel>
                 <CheckBox Margin="10,5,0,0" Grid.Row="1" Name="SaveLogToFile" IsEnabled="{Binding NotProcessing}" 
-                      IsChecked="{Binding IsSaveLogToFileEnabled, Mode=OneWayToSource}">
+                          IsChecked="{Binding IsSaveLogToFileEnabled, Mode=OneWayToSource}">
                     Save log to file
                 </CheckBox>
             </Grid>
         </StackPanel>
         <ScrollViewer Grid.Column="1" Grid.Row="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Margin="10,10,0,0">
-            <TextBlock Name="LogRichTextBox" Text="{Binding Log}" TextTrimming="CharacterEllipsis" ScrollViewer.CanContentScroll="True">
-
-            </TextBlock>
+            <TextBlock Name="LogRichTextBox" Text="{Binding Log}" TextTrimming="CharacterEllipsis" ScrollViewer.CanContentScroll="True"/>
         </ScrollViewer>
         <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Height="16" Margin="0,0,0,0">
-            <TextBlock Margin="0,0,10,0">Total Count: <Bold><TextBlock Text="{Binding MovieListCount}"></TextBlock></Bold></TextBlock>
-            <TextBlock Margin="0,0,10,0">LeftToAnalyze: <Bold><TextBlock Text="{Binding LeftToAnalyze}"></TextBlock></Bold></TextBlock>
-            <TextBlock Margin="0,0,10,0">Found: <Bold><TextBlock Text="{Binding Found}"></TextBlock></Bold></TextBlock>
-            <TextBlock>NotFound: <Bold><TextBlock Text="{Binding NotFound}"></TextBlock></Bold></TextBlock>
-            <TextBlock></TextBlock>
+            <TextBlock Margin="0,0,10,0">Total Count: <TextBlock Text="{Binding MovieListCount}" FontWeight="Bold"/></TextBlock>
+            <TextBlock Margin="0,0,10,0">LeftToAnalyze: <TextBlock Text="{Binding LeftToAnalyze}" FontWeight="Bold"/></TextBlock>
+            <TextBlock Margin="0,0,10,0">Found: <TextBlock Text="{Binding Found}" FontWeight="Bold"/></TextBlock>
+            <TextBlock>NotFound: <TextBlock Text="{Binding NotFound}" FontWeight="Bold"/></TextBlock>
         </StackPanel>
     </Grid>
 </Window>

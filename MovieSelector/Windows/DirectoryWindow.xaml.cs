@@ -10,12 +10,18 @@ namespace MovieSelector.Windows
     /// </summary>
     public partial class DirectoryWindow
     {
+        private MovieSelectorViewModel ViewModel { get; }
+
         public DirectoryWindow()
         {
             InitializeComponent();
+
+            ViewModel = (MovieSelectorViewModel) DataContext;
+
+            Closing += OnClosing;
         }
 
-        private void AddDirectory_OnClick(object sender, RoutedEventArgs e)
+        private void AddDirectoryClick(object sender, RoutedEventArgs e)
         {
             var vm = (OpenDialogViewModel)new OpenDialogView().DataContext;
 
@@ -24,18 +30,18 @@ namespace MovieSelector.Windows
 
             if (vm.Show() != true) return;
 
-            ((MovieSelectorViewModel)DataContext).AddDirectory(vm.SelectedFolder.Path);
+            ViewModel.AddDirectory(vm.SelectedFolder.Path);
         }
 
-        private void RemoveDirectory_OnClick(object sender, RoutedEventArgs e)
+        private void RemoveDirectoryClick(object sender, RoutedEventArgs e)
         {
             if (LbDirectories.SelectedItem != null)
             {
-                ((MovieSelectorViewModel)DataContext).RemoveDirectory(LbDirectories.SelectedItem as string);
+                ViewModel.RemoveDirectory(LbDirectories.SelectedItem as string);
             }
         }
 
-        private void BrowseFile_OnClick(object sender, RoutedEventArgs e)
+        private void BrowseFileClick(object sender, RoutedEventArgs e)
         {
             var vm = (OpenDialogViewModel)new OpenDialogView().DataContext;
 
@@ -45,25 +51,10 @@ namespace MovieSelector.Windows
 
             if (vm.Show() != true) return;
 
-            ((MovieSelectorViewModel)DataContext).AddInfoFile(vm.SelectedFilePath);
+            ViewModel.AddInfoFile(vm.SelectedFilePath);
         }
 
-        protected void MinimizeClick(object sender, RoutedEventArgs e)
-        {
-            WindowState = WindowState.Minimized;
-        }
-
-        protected void RestoreClick(object sender, RoutedEventArgs e)
-        {
-            WindowState = (WindowState == WindowState.Normal) ? WindowState.Maximized : WindowState.Normal;
-        }
-
-        protected void CloseClick(object sender, RoutedEventArgs e)
-        {
-            Close();
-        }
-
-        protected override void OnClosing(CancelEventArgs e)
+        public void OnClosing(object sender, CancelEventArgs e)
         {
             e.Cancel = true;
             Hide();

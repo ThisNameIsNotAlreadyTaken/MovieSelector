@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Common.Models;
 using Newtonsoft.Json;
 
-namespace Common.Instrastructure
+namespace Common.Instrastructure.Helpers
 {
     public static class WebHelper
     {

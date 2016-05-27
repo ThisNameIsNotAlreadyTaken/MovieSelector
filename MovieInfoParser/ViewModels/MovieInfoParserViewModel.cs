@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Input;
 using Common.Instrastructure;
+using Common.Instrastructure.Helpers;
 using Common.Models;
 using Newtonsoft.Json;
 
@@ -73,8 +74,8 @@ namespace MovieInfoParser.ViewModels
         public void AnalyzeResults(Movie movie, List<KinopoiskInfo> infoList, bool result)
         {
             Log.Append(result
-                        ? string.Format("Info found: {0}{1}", movie.FileName, Environment.NewLine)
-                        : string.Format("Info not found: {0}{1}", movie.FileName, Environment.NewLine));
+                        ? $"Info found: {movie.FileName}{Environment.NewLine}"
+                        : $"Info not found: {movie.FileName}{Environment.NewLine}");
 
             NotifyPropertyChanged("Log");
 

@@ -3,7 +3,7 @@ using System.IO;
 using System.Linq;
 using Common.Models;
 
-namespace Common.Instrastructure
+namespace Common.Instrastructure.Helpers
 {
     public static class MovieDirectoryHelper
     {
