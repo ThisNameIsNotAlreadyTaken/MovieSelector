@@ -8,6 +8,7 @@ using System.Linq;
 using System.Windows.Input;
 using Common.Instrastructure;
 using Common.Instrastructure.Helpers;
+using Common.Instrastructure.SearchEngines;
 using Common.Models;
 using MovieSelector.Windows;
 using Newtonsoft.Json;
@@ -20,10 +21,23 @@ namespace MovieSelector.ViewModels
     {
         #region Properties
 
-        private List<Movie> _movieList = new List<Movie>();
+        private List<MovieModel> _movieList = new List<MovieModel>();
         private readonly Random _rnd = new Random();
 
-        private List<KinopoiskInfo> LocalInfoList { get; set; }
+        public EngineType EngineTypeValue { get; set; }
+
+        private bool _onlineMode;
+        public bool OnlineMode
+        {
+            get { return _onlineMode; }
+            set
+            {
+                _onlineMode = value;
+                NotifyPropertyChanged("OnlineMode");
+            }
+        }
+
+        private List<CommonInfoModel> LocalInfoList { get; set; }
 
         public string LocalInfoFileName { get; set; }
 
@@ -38,8 +52,8 @@ namespace MovieSelector.ViewModels
             }
         }
 
-        private Movie _selectedMovie;
-        public Movie SelectedMovie
+        private MovieModel _selectedMovie;
+        public MovieModel SelectedMovie
         {
             get { return _selectedMovie; }
             set
@@ -64,8 +78,8 @@ namespace MovieSelector.ViewModels
             }
         }
 
-        private Movie _searchBoxResult;
-        public Movie SearchBoxResult
+        private MovieModel _searchBoxResult;
+        public MovieModel SearchBoxResult
         {
             get { return _searchBoxResult; }
             set
@@ -84,7 +98,7 @@ namespace MovieSelector.ViewModels
 
         #region Methods
 
-        private async void SelectMovie(Movie movie)
+        private async void SelectMovie(MovieModel movie)
         {
             if (!_movieList.Any()) return;
 
@@ -95,23 +109,25 @@ namespace MovieSelector.ViewModels
 
             try
             { 
-                if (selectedMovie.KinopoiskInfo?.Id == null)
+                if (selectedMovie.Info?.Id == null)
                 {
-                    if (WebHelper.IsInternetConnectionAvailable)
+                    if (OnlineMode && WebHelper.IsInternetConnectionAvailable)
                     {
-                        selectedMovie.KinopoiskInfo = await WebHelper.GetMovieInfo(selectedMovie, 1, 1);
+                        var searchEngine = EngineFactory.GetEngine(EngineTypeValue);
+
+                        selectedMovie.Info = await searchEngine.GetMovieInfo(selectedMovie);
                     }
 
-                    if (selectedMovie.KinopoiskInfo?.Id == null && LocalInfoList != null)
+                    if (selectedMovie.Info?.Id == null && LocalInfoList != null)
                     {
-                        selectedMovie.KinopoiskInfo =
+                        selectedMovie.Info =
                             LocalInfoList.FirstOrDefault(
                                 x => x.RelatedFileName == selectedMovie.FileNameWithoutExtension);
                     }
 
-                    if (selectedMovie.KinopoiskInfo == null)
+                    if (selectedMovie.Info == null)
                     {
-                        selectedMovie.KinopoiskInfo = new KinopoiskInfo();
+                        selectedMovie.Info = new CommonInfoModel();
                     }
                 }
             }
@@ -189,7 +205,7 @@ namespace MovieSelector.ViewModels
                     using (var jReader = new JsonTextReader(file))
                     {
                         var serializer = new JsonSerializer();
-                        var list = serializer.Deserialize<List<KinopoiskInfo>>(jReader);
+                        var list = serializer.Deserialize<List<CommonInfoModel>>(jReader);
 
                         if (!list.Any()) return;
 
@@ -235,7 +251,7 @@ namespace MovieSelector.ViewModels
 
         #region Commands
 
-        public ICommand SelectMovieCommand => new DelegateParametrizedCommand<Movie>(SelectMovie);
+        public ICommand SelectMovieCommand => new DelegateParametrizedCommand<MovieModel>(SelectMovie);
 
         public ICommand ResetCounterCommand => new DelegateCommand(ResetCounter);
 
@@ -282,7 +298,7 @@ namespace MovieSelector.ViewModels
 
                     if (filter == null) return null;
 
-                    var result = new List<Movie>();
+                    var result = new List<MovieModel>();
 
                     var translitEnFilter = Transliter.TranslitRuToEn(filter);
                     var translitRuFilter = Transliter.TranslitEnToRu(filter);

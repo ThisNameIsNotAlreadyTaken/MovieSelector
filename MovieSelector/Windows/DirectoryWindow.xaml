@@ -4,8 +4,9 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:shell="http://schemas.microsoft.com/winfx/2006/xaml/presentation/shell"
-        xmlns:vm="clr-namespace:MovieSelector.ViewModels"
         xmlns:layout="clr-namespace:MovieSelector.Layout"
+        xmlns:system="clr-namespace:System;assembly=mscorlib"
+        xmlns:enginesAlias="clr-namespace:Common.Instrastructure.SearchEngines;assembly=Common"
         mc:Ignorable="d"
         Title="Pick directories" Height="300" Width="500" WindowStartupLocation="CenterOwner">
     <shell:WindowChrome.WindowChrome>
@@ -16,9 +17,13 @@
             GlassFrameThickness="0">
         </shell:WindowChrome>
     </shell:WindowChrome.WindowChrome>
-    <Window.DataContext>
-        <vm:MovieSelectorViewModel></vm:MovieSelectorViewModel>
-    </Window.DataContext>
+    <Window.Resources>
+        <ObjectDataProvider x:Key="EnginesDataFromEnum" MethodName="GetValues" ObjectType="{x:Type system:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="enginesAlias:EngineType"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+    </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -92,7 +97,7 @@
             <Grid Grid.Row="1">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
-                    <ColumnDefinition Width="3*"/>
+                    <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
                 <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" Margin="10,0,0,0">
                     <Button Name="AddDirectory" Style="{StaticResource WindowColoredButtonStyle}"
@@ -101,20 +106,28 @@
                     <Button Name="RemoveDirectory" Style="{StaticResource WindowColoredButtonStyle}"  
                             FontSize="30" Content="&#x2796;" Click="RemoveDirectoryClick" Margin="0,0,10,0"  
                             ToolTip="Remove directory" VerticalAlignment="Top"/>
+                    <CheckBox Content="Online Mode" FontSize="15" HorizontalAlignment="Left" Style="{StaticResource CheckBoxStyle}" VerticalAlignment="Center" IsChecked="{Binding OnlineMode}"/>
                 </StackPanel>
                 <StackPanel Grid.Column="1" DockPanel.Dock="Right" Orientation="Horizontal" HorizontalAlignment="Right">
-                    <Label VerticalAlignment="Top" FontSize="20" Margin="0,5,0,0" Content="Local info file:"/>
-                    <Label FontFamily="Segoe UI Symbol" Foreground="{DynamicResource GreenBrush}"  VerticalAlignment="Top" FontSize="25" 
+                    <StackPanel Orientation="Horizontal" Visibility="{Binding OnlineMode, Converter={StaticResource AntiBoolToCollapsedVisibilityConverter}}">
+                        <Label VerticalAlignment="Center" FontSize="15" Margin="0,0,0,0" Content="Local info file:"/>
+                        <Label FontFamily="Segoe UI Symbol" Foreground="{DynamicResource GreenBrush}"  VerticalAlignment="Top" FontSize="25" 
                            Content="&#x2714;" 
                            Visibility="{Binding LocalInfoFileName, Converter={StaticResource NullCollapsedVisibilityConverter}}" 
                            ToolTip="{Binding LocalInfoFileName}"/>
-                    <Label FontFamily="Segoe UI Symbol" Foreground="{DynamicResource RedBrush}"  VerticalAlignment="Top" FontSize="25" 
+                        <Label FontFamily="Segoe UI Symbol" Foreground="{DynamicResource RedBrush}"  VerticalAlignment="Top" FontSize="25" 
                            Content="&#x2718;" 
                            Visibility="{Binding LocalInfoFileName, Converter={StaticResource AntiNullCollapsedVisibilityConverter}}" 
                            ToolTip="No file used"/>
-                    <Button Name="BrowseFile" Style="{StaticResource WindowColoredButtonStyle}"
+                        <Button Name="BrowseFile" Style="{StaticResource WindowColoredButtonStyle}"
                             FontSize="30" Content="&#x270E;" Click="BrowseFileClick" Margin="0,0,10,0"  
                             ToolTip="Select local info file" VerticalAlignment="Top"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Visibility="{Binding OnlineMode, Converter={StaticResource BoolToCollapsedVisibilityConverter}}">
+                        <Label VerticalAlignment="Center" FontSize="15" Margin="0,0,5,0" Content="Engine:"/>
+                        <ComboBox ItemsSource="{Binding Source={StaticResource EnginesDataFromEnum}}" SelectedItem="{Binding EngineTypeValue}" 
+                                  Margin="0,0,10,0" IsEnabled="{Binding NotProcessing}" VerticalAlignment="Center" Style="{StaticResource ComboBoxStyle}"/>
+                    </StackPanel>
                 </StackPanel>
             </Grid>
         </Grid>

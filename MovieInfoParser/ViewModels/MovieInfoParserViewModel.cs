@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Input;
 using Common.Instrastructure;
 using Common.Instrastructure.Helpers;
+using Common.Instrastructure.SearchEngines;
 using Common.Models;
 using Newtonsoft.Json;
 
@@ -15,6 +16,8 @@ namespace MovieInfoParser.ViewModels
     public class MovieInfoParserViewModel : ObservableObject
     {
         public ObservableCollection<string> Directories { get; set; }
+
+        public EngineType EngineTypeValue { get; set; }
 
         public MovieInfoParserViewModel()
         {
@@ -31,12 +34,16 @@ namespace MovieInfoParser.ViewModels
         public StringBuilder Log { get; set; } = new StringBuilder();
 
         public bool NotProcessing { get; set; } = true;
+        public bool IsSaveLogToFileEnabled { get; set; } = false;
+
+        /* counters */
 
         public int MovieListCount { get; set; }
         public int LeftToAnalyze { get; set; }
         public int Found { get; set; }
         public int NotFound { get; set; }
-        public bool IsSaveLogToFileEnabled { get; set; } = false;
+
+        /* methods */
 
         public void AddDirectory(string item)
         {
@@ -52,7 +59,7 @@ namespace MovieInfoParser.ViewModels
             NotifyPropertyChanged("Directories");
         }
 
-        public void PrepareToAnalyze(List<Movie> movieList)
+        public void PrepareToAnalyze(List<MovieModel> movieList)
         {
             Log.Clear();
 
@@ -71,7 +78,7 @@ namespace MovieInfoParser.ViewModels
             NotifyPropertyChanged("NotFound");
         }
 
-        public void AnalyzeResults(Movie movie, List<KinopoiskInfo> infoList, bool result)
+        public void AnalyzeResults(MovieModel movie, List<CommonInfoModel> infoList, bool result)
         {
             Log.Append(result
                         ? $"Info found: {movie.FileName}{Environment.NewLine}"
@@ -106,7 +113,7 @@ namespace MovieInfoParser.ViewModels
         private void ScanForInfo()
         {
             var movieList = MovieDirectoryHelper.GetMoviesFromFolders(Directories);
-            var infoList = new List<KinopoiskInfo> ();
+            var infoList = new List<CommonInfoModel> ();
 
             PrepareToAnalyze(movieList);
 
@@ -114,12 +121,15 @@ namespace MovieInfoParser.ViewModels
             {
                 if (movieList.Any())
                 {
+                    var searchEngine = EngineFactory.GetEngine(EngineTypeValue);
+
                     movieList.ForEach(async m =>
                     {
-                        var info = await WebHelper.GetMovieInfo(m);
+                        var info = await searchEngine.GetMovieInfo(m);
 
                         if (info != null)
                         {
+                            info.RelatedFileName = m.FileNameWithoutExtension;
                             infoList.Add(info);
                         }
 
@@ -134,7 +144,7 @@ namespace MovieInfoParser.ViewModels
             }
         }
 
-        private void SaveInfoListToFile(IEnumerable<KinopoiskInfo> infoList)
+        private void SaveInfoListToFile(IEnumerable<CommonInfoModel> infoList)
         {
             var ticks = DateTime.Now.Ticks;
 

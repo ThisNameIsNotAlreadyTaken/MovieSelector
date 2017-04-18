@@ -1,6 +1,16 @@
 ﻿{
-  "ExtensionArray": [ ".avi", ".mkv", ".m4v" ],
-  "KinopoiskApiUrl": 	"http://api.kinopoisk.cf",
-  "QIMDBUrl": 	"http://api.qimdb.com/online",	
-  "YandexImagesUrl": 	"http://kinopoisk.ru/images/"	
+  "ExtensionArray": [ ".avi", ".mkv", ".m4v", "mp4" ],
+  "TheMovieDBConfiguration": {
+    "searchUrlTemplate": "https://api.themoviedb.org/3/search/movie?api_key={0}&query={1}&language=ru-RU&region=RU",
+    "imageUrlTemplate": "https://image.tmdb.org/t/p/w300{0}",
+    "creditsUrlTemplate": "https://api.themoviedb.org/3/movie/{0}/credits?api_key={1}",
+    "apiKey": "6c3abfa4a5d9f233c40c619f6967bab2"
+  },
+  "OmdbApiConfiguration": {
+    "searchUrlTemplate": "http://www.omdbapi.com/?t={0}&plot=full"
+  },
+  "RequestConfiguration": {
+    "AttemptsCount": 5,
+    "ReconnectTime": 600
+  }
 }

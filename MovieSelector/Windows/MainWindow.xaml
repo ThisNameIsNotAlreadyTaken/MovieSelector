@@ -94,7 +94,7 @@
                                     </Binding>
                                 </wpf:AutoCompleteTextBox.SelectedItem>
                                 <wpf:AutoCompleteTextBox.ItemTemplate>
-                                    <DataTemplate DataType="{x:Type models:Movie}">
+                                    <DataTemplate DataType="{x:Type models:MovieModel}">
                                         <Border Padding="5">
                                             <Grid>
                                                 <TextBlock Text="{Binding FileNameWithoutExtension}" VerticalAlignment="Top"/>
@@ -148,7 +148,7 @@
                     </Grid.ColumnDefinitions>
                     <Grid Margin="0,5,0,5" Visibility="{Binding SelectedMovie, Converter={StaticResource NullVisibilityConverter}}">
                         <Image Source="{StaticResource NoImage}" />
-                        <Image Source="{Binding SelectedMovie.KinopoiskInfo.Poster}" />
+                        <Image Source="{Binding SelectedMovie.Info.Poster}" />
                     </Grid>
                     <DockPanel Grid.Column="1" Visibility="{Binding SelectedMovie, Converter={StaticResource NullVisibilityConverter}}">
                         <Grid Margin="5,5,0,0">
@@ -172,73 +172,66 @@
                             </Label>
                             <Label Grid.Column="0" Grid.Row="1" FontSize="18" Foreground="{DynamicResource ForegroundBrush}">Movie name:</Label>
                             <Label Grid.Column="1" Grid.Row="1" Margin="0,5,0,0">
-                                <TextBlock Text="{Binding SelectedMovie.KinopoiskInfo.Name, 
+                                <TextBlock Text="{Binding SelectedMovie.Info.Name, 
                                            Converter={StaticResource NullToUnknownStringConverter}}"
                                            Foreground="{DynamicResource ForegroundBrush}"
                                            TextWrapping="WrapWithOverflow" TextTrimming="CharacterEllipsis" />
                             </Label>
-                            <Label Grid.Column="0" Grid.Row="2" FontSize="18" Foreground="{DynamicResource ForegroundBrush}">Year :</Label>
+                            <Label Grid.Column="0" Grid.Row="2" FontSize="18" Foreground="{DynamicResource ForegroundBrush}">Release date:</Label>
                             <Label Grid.Column="1" Grid.Row="2" Margin="0,5,0,0">
-                                <TextBlock Text="{Binding SelectedMovie.KinopoiskInfo.Year, 
+                                <TextBlock Text="{Binding SelectedMovie.Info.ReleaseDate, 
                                            Converter={StaticResource NullToUnknownStringConverter}}" 
                                            Foreground="{DynamicResource ForegroundBrush}"
                                            TextWrapping="WrapWithOverflow" />
                             </Label>
-                            <Label Grid.Column="0" Grid.Row="3" FontSize="18" Foreground="{DynamicResource ForegroundBrush}">Starring :</Label>
+                            <Label Grid.Column="0" Grid.Row="3" FontSize="18" Foreground="{DynamicResource ForegroundBrush}">Starring:</Label>
                             <Label Grid.Column="1" Grid.Row="3" Margin="0,5,0,0" 
-                                   ToolTip="{Binding SelectedMovie.KinopoiskInfo.Actors, 
+                                   ToolTip="{Binding SelectedMovie.Info.Actors, 
                                    Converter={StaticResource NullToUnknownStringConverter}}" >
-                                <TextBlock Text="{Binding SelectedMovie.KinopoiskInfo.Actors, 
+                                <TextBlock Text="{Binding SelectedMovie.Info.Actors, 
                                            Converter={StaticResource NullToUnknownStringConverter}}" 
                                            Foreground="{DynamicResource ForegroundBrush}"
                                            TextWrapping="WrapWithOverflow" TextTrimming="CharacterEllipsis" />
                             </Label>
-                            <Label Grid.Column="0" Grid.Row="4" FontSize="18" Foreground="{DynamicResource ForegroundBrush}">Directors :</Label>
+                            <Label Grid.Column="0" Grid.Row="4" FontSize="18" Foreground="{DynamicResource ForegroundBrush}">Directors:</Label>
                             <Label Grid.Column="1" Grid.Row="4" Margin="0,5,0,0" 
-                                   ToolTip="{Binding SelectedMovie.KinopoiskInfo.Directors, 
+                                   ToolTip="{Binding SelectedMovie.Info.Directors, 
                                    Converter={StaticResource NullToUnknownStringConverter}}">
-                                <TextBlock Text="{Binding SelectedMovie.KinopoiskInfo.Directors, 
+                                <TextBlock Text="{Binding SelectedMovie.Info.Directors, 
                                            Converter={StaticResource NullToUnknownStringConverter}}"
                                            Foreground="{DynamicResource ForegroundBrush}"
                                            TextWrapping="WrapWithOverflow" TextTrimming="CharacterEllipsis" />
                             </Label>
                             <Label Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Foreground="{DynamicResource ForegroundBrush}">
                                 <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
-                                    <TextBlock Text="{Binding SelectedMovie.KinopoiskInfo.Description}" TextWrapping="Wrap" />
+                                    <TextBlock Text="{Binding SelectedMovie.Info.Description}" TextWrapping="Wrap" />
                                 </ScrollViewer>
                             </Label>
-                            <StackPanel Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="6" Visibility="{Binding SelectedMovie.KinopoiskInfo.Rating, Converter={StaticResource NullVisibilityConverter}}">
+                            <StackPanel Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="6" Visibility="{Binding SelectedMovie.Info.Ratings, Converter={StaticResource ListCountVisibilityConverter}}">
                                 <Grid>
                                     <Grid.RowDefinitions>
                                         <RowDefinition/>
                                         <RowDefinition/>
                                     </Grid.RowDefinitions>
-                                    <StackPanel Orientation="Horizontal" Grid.Row="0">
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition/>
-                                                <ColumnDefinition/>
-                                            </Grid.ColumnDefinitions>
-                                            <controls:Rating Value="{Binding SelectedMovie.KinopoiskInfo.Rating.Kinopoisk, Converter={StaticResource DoubleToPercentRatingConverter}}" ItemCount="5" SelectionMode="Continuous" Foreground="{DynamicResource DarkGoldenrodBrush}"/>
-                                            <TextBlock Grid.Column="1" VerticalAlignment="Top" Margin="0,-10,0,0" FontWeight="Bold">
-                                                <Label FontSize="30" Content="{Binding SelectedMovie.KinopoiskInfo.Rating.Kinopoisk}" />
-                                            </TextBlock>
-                                        </Grid>
-                                        <TextBlock VerticalAlignment="Center" Text="(kinopoisk)" FontWeight="SemiBold"/>
-                                    </StackPanel>
-                                    <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="0,5,0,0">
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition/>
-                                                <ColumnDefinition/>
-                                            </Grid.ColumnDefinitions>
-                                            <controls:Rating Value="{Binding SelectedMovie.KinopoiskInfo.Rating.ImDb, Converter={StaticResource DoubleToPercentRatingConverter}}" ItemCount="5" SelectionMode="Continuous" Foreground="{DynamicResource DarkGoldenrodBrush}"/>
-                                            <TextBlock Grid.Column="1" VerticalAlignment="Top" Margin="0,-10,0,0" FontWeight="Bold">
-                                                <Label FontSize="30" Content="{Binding SelectedMovie.KinopoiskInfo.Rating.ImDb}"/>
-                                            </TextBlock>
-                                        </Grid>
-                                        <TextBlock VerticalAlignment="Center" Text="(IMDb)" FontWeight="SemiBold"/>
-                                    </StackPanel>
+                                    <ItemsControl ItemsSource="{Binding SelectedMovie.Info.Ratings}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Orientation="Horizontal" Margin="0,0,0,0">
+                                                    <Grid>
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition/>
+                                                            <ColumnDefinition/>
+                                                        </Grid.ColumnDefinitions>
+                                                        <controls:Rating Value="{Binding Value, Converter={StaticResource StringToPercentRatingConverter}}" ItemCount="5" SelectionMode="Continuous" Foreground="{DynamicResource DarkGoldenrodBrush}"/>
+                                                        <TextBlock Grid.Column="1" VerticalAlignment="Top" Margin="0,-10,0,0" FontWeight="Bold">
+                                                            <Label FontSize="30" Content="{Binding Value}"/>
+                                                        </TextBlock>
+                                                    </Grid>
+                                                    <TextBlock VerticalAlignment="Center" Text="{Binding Source}" FontWeight="SemiBold"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
                                 </Grid>
                             </StackPanel>
                         </Grid>
@@ -249,7 +242,7 @@
                         <ColumnDefinition/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <WrapPanel Orientation="Horizontal" Margin="10,0,0,0" VerticalAlignment="Center">
+                    <WrapPanel Orientation="Horizontal" Margin="10,0,0,0" VerticalAlignment="Center" Visibility="{Binding Directories, Converter={StaticResource ListCountVisibilityConverter}}">
                         <TextBlock> Was Rolled <TextBlock FontSize="15" Text="{Binding Counter}" FontWeight="Bold"/> times</TextBlock>
                         <Button Name="ResetCount" Style="{StaticResource WindowColoredButtonStyle}" 
                                 FontSize="25" Content="&#xE248;" Command="{Binding ResetCounterCommand}" Margin="10,-12,0,0"

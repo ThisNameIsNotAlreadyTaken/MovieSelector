@@ -16,20 +16,15 @@ namespace MovieSelector.Windows
         {
             InitializeComponent();
 
-            ViewModel = new MovieSelectorViewModel();
-            DataContext = ViewModel;
+            ViewModel = (MovieSelectorViewModel)DataContext;
 
-            _dWindow = new DirectoryWindow();
+            _dWindow = new DirectoryWindow(ViewModel);
 
             Closing += OnClosing;
         }
 
         private void DirectoryDialogShowClick(object sender, RoutedEventArgs e)
         {
-            if (_dWindow.DataContext == null)
-            {
-                _dWindow.DataContext = DataContext;
-            }
             _dWindow.Show();
         }
 

@@ -19,7 +19,11 @@
                     <converters:AntiListCountVisibilityConverter x:Key="AntiListCountVisibilityConverter" />
                     <converters:NullToUnknownStringConverter x:Key="NullToUnknownStringConverter" />
                     <converters:DoubleToPercentRatingConverter x:Key="DoubleToPercentRatingConverter" />
+                    <converters:StringToPercentRatingConverter x:Key="StringToPercentRatingConverter" />
                     <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+                    <converters:BoolToCollapsedVisibilityConverter x:Key="BoolToCollapsedVisibilityConverter" />
+                    <converters:AntiBoolToVisibilityConverter x:Key="AntiBoolToVisibilityConverter" />
+                    <converters:AntiBoolToCollapsedVisibilityConverter x:Key="AntiBoolToCollapsedVisibilityConverter" />
                     <converters:NullCollapsedVisibilityConverter x:Key="NullCollapsedVisibilityConverter" />
                     <converters:AntiNullCollapsedVisibilityConverter x:Key="AntiNullCollapsedVisibilityConverter" />
                 </ResourceDictionary>

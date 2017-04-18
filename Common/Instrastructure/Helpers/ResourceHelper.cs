@@ -5,19 +5,42 @@ using Newtonsoft.Json;
 
 namespace Common.Instrastructure.Helpers
 {
+    public class TheMovieDbConfiguration
+    {
+        public string SearchUrlTemplate { get; set; }
+
+        public string ImageUrlTemplate { get; set; }
+
+        public string CreditsUrlTemplate { get; set; }
+
+        public string ApiKey { get; set; }
+    }
+
+    public class OmdbApiConfiguration
+    {
+        public string SearchUrlTemplate { get; set; }
+    }
+
+    public class RequestConfiguration
+    {
+        public int AttemptsCount { get; set; }
+
+        public int ReconnectTime { get; set; }
+    }
+
     public class Resource
     {
-        public string QimdbUrl { get; set; }
-
-        public string KinopoiskApiUrl { get; set; }
-
-        public string YandexImagesUrl { get; set; }
-
         public List<string> ExtensionArray { get; set; }
 
         public List<string> Directories { get; set; }
 
         public string LocalFile { get; set; }
+
+        public TheMovieDbConfiguration TheMovieDbConfiguration { get; set; }
+
+        public OmdbApiConfiguration OmdbApiConfiguration { get; set; }
+
+        public RequestConfiguration RequestConfiguration { get; set; }
     }
 
     public static class ResourceHelper

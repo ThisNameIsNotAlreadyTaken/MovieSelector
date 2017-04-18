@@ -12,11 +12,11 @@ namespace MovieSelector.Windows
     {
         private MovieSelectorViewModel ViewModel { get; }
 
-        public DirectoryWindow()
+        public DirectoryWindow(MovieSelectorViewModel viewModel)
         {
             InitializeComponent();
 
-            ViewModel = (MovieSelectorViewModel) DataContext;
+            DataContext = ViewModel = viewModel;
 
             Closing += OnClosing;
         }

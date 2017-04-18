@@ -2,9 +2,9 @@
 
 namespace Common.Models
 {
-    public class Movie
+    public class MovieModel
     {
-        public Movie(string path)
+        public MovieModel(string path)
         {
             FullPath = path;
         }
@@ -18,6 +18,6 @@ namespace Common.Models
         public string FileNameWithoutExtension
             => FileName.Substring(0, FileName.LastIndexOf(".", StringComparison.Ordinal));
 
-        public KinopoiskInfo KinopoiskInfo { get; set; }
+        public CommonInfoModel Info { get; set; }
     }
 }

@@ -16,8 +16,7 @@ namespace MovieInfoParser
         {
             InitializeComponent();
 
-            ViewModel = new MovieInfoParserViewModel();
-            DataContext = ViewModel;
+            ViewModel = (MovieInfoParserViewModel)DataContext;
         }
 
 

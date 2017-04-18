@@ -4,11 +4,20 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="clr-namespace:MovieInfoParser.ViewModels"
+        xmlns:system="clr-namespace:System;assembly=mscorlib"
+        xmlns:enginesAlias="clr-namespace:Common.Instrastructure.SearchEngines;assembly=Common"
         mc:Ignorable="d"
-        Title="MovieInfoParser" Height="450" Width="750" Icon="icon.ico">
+        Title="MovieInfoParser" Height="450" Width="850" Icon="icon.ico">
     <Window.DataContext>
         <vm:MovieInfoParserViewModel></vm:MovieInfoParserViewModel>
     </Window.DataContext>
+    <Window.Resources>
+        <ObjectDataProvider x:Key="EnginesDataFromEnum" MethodName="GetValues" ObjectType="{x:Type system:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="enginesAlias:EngineType"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+    </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="129*"/>
@@ -28,6 +37,7 @@
                 <StackPanel Orientation="Horizontal">
                     <Button Name="AddDirectory" Click="AddDirectoryClick" Margin="10,0,10,0" IsEnabled="{Binding NotProcessing}" Width="63">Add</Button>
                     <Button Name="RemoveDirectory" Click="RemoveDirectoryClick" Margin="0,0,10,0" IsEnabled="{Binding NotProcessing}" Width="81">Remove</Button>
+                    <ComboBox ItemsSource="{Binding Source={StaticResource EnginesDataFromEnum}}" SelectedItem="{Binding EngineTypeValue}" Margin="0,0,10,0" IsEnabled="{Binding NotProcessing}"/>
                     <Button Name="ScanForInfo" Command="{Binding ScanForInfoCommand}" IsEnabled="{Binding NotProcessing}" Width="73">Scan</Button>
                 </StackPanel>
                 <CheckBox Margin="10,5,0,0" Grid.Row="1" Name="SaveLogToFile" IsEnabled="{Binding NotProcessing}" 

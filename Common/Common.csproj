@@ -71,10 +71,15 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Instrastructure\Converters\AntiBoolToCollapsedVisibilityConverter.cs" />
+    <Compile Include="Instrastructure\Converters\AntiBoolToVisibilityConverter.cs" />
+    <Compile Include="Instrastructure\Converters\BoolToCollapsedVisibilityConverter.cs" />
     <Compile Include="Instrastructure\Converters\BoolToVisibilityConverter.cs" />
     <Compile Include="Instrastructure\Converters\DoubleToPercentRatingConverter.cs" />
     <Compile Include="Instrastructure\Converters\NullToUnknownStringConverter.cs" />
+    <Compile Include="Instrastructure\Converters\StringToPercentRatingConverter.cs" />
     <Compile Include="Instrastructure\DelegateParametrizedCommand.cs" />
+    <Compile Include="Instrastructure\Helpers\JsonHelper.cs" />
     <Compile Include="Instrastructure\Helpers\ResourceHelper.cs" />
     <Compile Include="Instrastructure\Converters\AntiListCountVisibilityConverter.cs" />
     <Compile Include="Instrastructure\Converters\AntiNullCollapsedVisibilityConverter.cs" />
@@ -85,11 +90,21 @@
     <Compile Include="Instrastructure\DelegateCommand.cs" />
     <Compile Include="Instrastructure\Helpers\MovieDirectoryHelper.cs" />
     <Compile Include="Instrastructure\ObservableObject.cs" />
-    <Compile Include="Instrastructure\Profession.cs" />
     <Compile Include="Instrastructure\Helpers\Transliter.cs" />
     <Compile Include="Instrastructure\Helpers\WebHelper.cs" />
-    <Compile Include="Models\KinopoiskInfo.cs" />
-    <Compile Include="Models\Movie.cs" />
+    <Compile Include="Instrastructure\SearchEngines\EngineFactory.cs" />
+    <Compile Include="Instrastructure\SearchEngines\Engines\EngineBase.cs" />
+    <Compile Include="Instrastructure\SearchEngines\Engines\OmdbEngine.cs" />
+    <Compile Include="Instrastructure\SearchEngines\Engines\TheMovieDbEngine.cs" />
+    <Compile Include="Instrastructure\SearchEngines\EngineType.cs" />
+    <Compile Include="Models\CommonInfoModel.cs" />
+    <Compile Include="Models\InfoModels\ISpecificInfoModel.cs" />
+    <Compile Include="Models\InfoModels\OmdbApi\OmdbApiInfo.cs" />
+    <Compile Include="Models\InfoModels\TheMovieDb\TheMovieDbParticipantInfo.cs" />
+    <Compile Include="Models\MovieModel.cs" />
+    <Compile Include="Models\ParticipantModel.cs" />
+    <Compile Include="Models\RatingModel.cs" />
+    <Compile Include="Models\InfoModels\TheMovieDb\TheMovieDbInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
